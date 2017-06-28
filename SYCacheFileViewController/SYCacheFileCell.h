@@ -1,0 +1,20 @@
+//
+//  SYCacheFileCell.h
+//  zhangshaoyu
+//
+//  Created by zhangshaoyu on 17/6/27.
+//  Copyright © 2017年 zhangshaoyu. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "SYCacheFileModel.h"
+
+static NSString *const reuseSYCacheDirectoryCell = @"SYCacheDirectoryCell";
+static CGFloat const heightSYCacheDirectoryCell = 60.0;
+
+@interface SYCacheFileCell : UITableViewCell
+
+/// 数据源
+@property (nonatomic, strong) SYCacheFileModel *model;
+
+@end
