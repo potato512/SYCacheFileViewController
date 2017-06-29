@@ -43,6 +43,12 @@
     NSLog(@"%@ 被释放了!", [self class]);
 }
 
+/**
+ *  文件阅读：图片浏览、文档查看、音视频播放
+ *
+ *  @param filePath 文件路径
+ *  @param target   UIViewController
+ */
 - (void)fileReadWithFilePath:(NSString *)filePath target:(id)target
 {
     if (filePath && target)
@@ -68,9 +74,13 @@
         NSURL *url = [NSURL fileURLWithPath:filePath];
         self.controller = target;
         
-        if (self.audioPlayer && self.audioPlayer.isPlaying)
+        if (self.audioPlayer)
         {
-            [self.audioPlayer stop];
+            if (self.audioPlayer.isPlaying)
+            {
+                [self.audioPlayer stop];
+            }
+            
             self.audioPlayer = nil;
         }
         
@@ -121,9 +131,13 @@
 {
     if (filePath && target)
     {
-        if (self.audioPlayer && self.audioPlayer.isPlaying)
+        if (self.audioPlayer)
         {
-            [self.audioPlayer stop];
+            if (self.audioPlayer.isPlaying)
+            {
+                [self.audioPlayer stop];
+            }
+            
             self.audioPlayer = nil;
         }
         

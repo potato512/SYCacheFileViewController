@@ -8,3 +8,12 @@
 ###### 缓存文件操作
 * 查看：视频播放、音频播放、文档查看、图片查看……
 * 删除：文件
+
+# 效果图
+![cacheFile_document.gif](./images/cacheFile_document.gif)
+
+![cacheFile_File01.gif](./images/cacheFile_File01.gif)
+
+![cacheFile_File02.gif](./images/cacheFile_File02.gif)
+
+![cacheFile_File03.gif](./images/cacheFile_File03.gif)

@@ -12,7 +12,7 @@
 
 /// 导航栏标题（默认缓存目录）
 @property (nonatomic, strong) NSString *cacheTitle;
-/// 数据源
+/// 数据源（默认home目录）
 @property (nonatomic, strong) NSMutableArray *cacheArray;
 
 @end

@@ -15,8 +15,6 @@
 @interface SYCacheFileViewController ()
 
 @property (nonatomic, strong) SYCacheFileTable *cacheTable;
-@property (nonatomic, assign) BOOL isFile;
-
 @property (nonatomic, strong) SYCacheFileRead *fileRead;
 
 @end
@@ -27,7 +25,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.navigationItem.title = (_cacheTitle ? _cacheTitle : @"缓存目录");
+    self.navigationItem.title = (_cacheTitle ? _cacheTitle : SYCacheFileTitle);
     
     [self setUI];
     [self loadData];
@@ -77,27 +75,12 @@
         {
             // 标题
             NSString *title = model.fileName;
-            
             // 子目录文件
-            NSArray *array = [SYCacheFileManager filesWithFilePath:path];
-            NSMutableArray *files = [NSMutableArray arrayWithCapacity:array.count];
-            for (id object in array)
-            {
-                SYCacheFileModel *model = [SYCacheFileModel new];
-                model.fileName = object;
-                model.filePath = [path stringByAppendingPathComponent:object];
-                
-                NSString *typeName = [SYCacheFileManager fileTypeWithFilePath:model.filePath];
-                if ([[SYCacheFileManager fileTypeRead] containsObject:typeName])
-                {
-                    [files addObject:model];
-                }
-            }
+            NSArray *files = [SYCacheFileManager fileModelsWithFilePath:path];
             
             SYCacheFileViewController *cacheVC = [SYCacheFileViewController new];
-            cacheVC.isFile = YES;
             cacheVC.cacheTitle = title;
-            cacheVC.cacheArray = files;
+            cacheVC.cacheArray = (NSMutableArray *)files;
             [weakSelf.navigationController pushViewController:cacheVC animated:YES];
         }
         else
@@ -117,18 +100,8 @@
     {
         // 初始化，首次显示总目录
         NSString *path = [SYCacheFileManager homeDirectoryPath];
-        NSArray *array = [SYCacheFileManager fileDirectionsWithFilePath:path];
-        self.cacheArray = [NSMutableArray arrayWithCapacity:array.count];
-        for (id object in array)
-        {
-            SYCacheFileModel *model = [SYCacheFileModel new];
-            model.fileName = object;
-            model.filePath = [path stringByAppendingPathComponent:object];
-            
-            [self.cacheArray addObject:model];
-        }
-        
-        self.isFile = NO;
+        NSArray *array = [SYCacheFileManager fileModelsWithFilePath:path];
+        self.cacheArray = [NSMutableArray arrayWithArray:array];
     }
     
     if (self.cacheArray && 0 < self.cacheArray.count)

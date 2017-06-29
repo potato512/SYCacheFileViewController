@@ -13,6 +13,10 @@
 
 - (NSString *)fileSize
 {
+    if (self.fileType == SYCacheFileTypeUnknow)
+    {
+        return [SYCacheFileManager fileSizeTotalStringWithDirectory:self.filePath];
+    }
     return [SYCacheFileManager fileSizeStringWithFilePath:self.filePath];
 }
 

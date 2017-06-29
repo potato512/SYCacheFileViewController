@@ -10,7 +10,12 @@
 
 @interface SYCacheFileRead : NSObject
 
-/// 文件阅读：图片浏览、文档查看、音视频播放
+/**
+ *  文件阅读：图片浏览、文档查看、音视频播放
+ *
+ *  @param filePath 文件路径
+ *  @param target   UIViewController
+ */
 - (void)fileReadWithFilePath:(NSString *)filePath target:(id)target;
 
 @end

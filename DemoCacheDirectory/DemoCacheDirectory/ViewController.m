@@ -33,22 +33,41 @@
 - (void)buttonClick
 {
     SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
+    // 指定目录，或默认目录
+//    NSString *path = [SYCacheFileManager documentDirectoryPath];
+//    NSArray *array = [SYCacheFileManager fileModelsWithFilePath:path];
+//    cacheVC.cacheArray = [NSMutableArray arrayWithArray:array];
+    // 其它属性设置
+    cacheVC.cacheTitle = @"我的缓存文件";
     [self.navigationController pushViewController:cacheVC animated:YES];
     
-    NSString *path = [SYCacheFileManager homeDirectoryPath];
-    NSLog(@"path = %@", path);
+//    NSString *path = [SYCacheFileManager homeDirectoryPath];
+//    NSLog(@"path = %@", path);
 //
-//    NSArray *array = [SYCacheDirectoryTools subPathsWithFilePath:path];
-//    NSLog(@"array = %@", array);
-//    for (id object in array)
-//    {
-//        NSLog(@"object = %@, class = %@", object, [object class]);
-//    }
+//    path = [SYCacheFileManager documentDirectoryPath];
+//    NSLog(@"path = %@", path);
 //    
-//    NSArray *directorys = [SYCacheDirectoryTools fileDirectionsWithFilePath:path];
-//    NSLog(@"directorys = %@", directorys);
-//    NSArray *files = [SYCacheDirectoryTools filesWithFilePath:path];
-//    NSLog(@"files = %@", files);
+//    path = [SYCacheFileManager cacheDirectoryPath];
+//    NSLog(@"path = %@", path);
+//    
+//    path = [SYCacheFileManager libraryDirectoryPath];
+//    NSLog(@"path = %@", path);
+//    
+//    path = [SYCacheFileManager tmpDirectoryPath];
+//    NSLog(@"path = %@", path);
+//    
+//    path = [SYCacheFileManager newFilePathWithPath:[SYCacheFileManager tmpDirectoryPath] name:@"Tmp001"];
+//    NSLog(@"path = %@", path);
+//    
+//    path = [SYCacheFileManager newFilePathCacheWithName:@"Tmp002"];
+//    NSLog(@"path = %@", path);
+//    
+//    path = [SYCacheFileManager newFilePathDocumentWithName:@"Document001"];
+//    NSLog(@"path = %@", path);
+//    
+//    path = [SYCacheFileManager newFilePathWithPath:[SYCacheFileManager tmpDirectoryPath] name:@"Tmp001.png"];
+//    NSLog(@"path = %@", path);
+
     
 }
 

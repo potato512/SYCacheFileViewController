@@ -11,8 +11,11 @@
 
 @interface SYCacheFileModel : NSObject
 
+/// 文件路径
 @property (nonatomic, strong) NSString *filePath;
+/// 文件名称
 @property (nonatomic, strong) NSString *fileName;
+/// 文件大小
 @property (nonatomic, strong) NSString *fileSize;
 
 /// 文件类型（1视频、2音频、3图片、4文档）
