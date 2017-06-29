@@ -41,8 +41,8 @@
     cacheVC.cacheTitle = @"我的缓存文件";
     [self.navigationController pushViewController:cacheVC animated:YES];
     
-//    NSString *path = [SYCacheFileManager homeDirectoryPath];
-//    NSLog(@"path = %@", path);
+    NSString *path = [SYCacheFileManager homeDirectoryPath];
+    NSLog(@"path = %@", path);
 //
 //    path = [SYCacheFileManager documentDirectoryPath];
 //    NSLog(@"path = %@", path);

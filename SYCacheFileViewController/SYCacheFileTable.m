@@ -56,7 +56,7 @@
     // 数据
     SYCacheFileModel *model = self.cacheDatas[indexPath.row];
     cell.model = model;
-    
+
     return cell;
 }
 

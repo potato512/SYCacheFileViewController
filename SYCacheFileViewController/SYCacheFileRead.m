@@ -18,6 +18,8 @@
 
 // 音频播放
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
+@property (nonatomic, assign) NSTimeInterval durationTotal;
+@property (nonatomic, assign) NSTimeInterval duration;
 
 // 文档查看（文档、图片、视频）
 @property (nonatomic, strong) UIDocumentInteractionController *documentController;
@@ -40,6 +42,23 @@
 // 内存管理
 - (void)dealloc
 {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    
+    if (self.audioPlayer)
+    {
+        if (self.audioPlayer.isPlaying)
+        {
+            [self.audioPlayer stop];
+        }
+        
+        self.audioPlayer = nil;
+    }
+    
+    if (self.documentController)
+    {
+        self.documentController = nil;
+    }
+    
     NSLog(@"%@ 被释放了!", [self class]);
 }
 
@@ -76,16 +95,29 @@
         
         if (self.audioPlayer)
         {
+            NSString *pathPrevious = self.audioPlayer.url.relativeString;
+            pathPrevious = [pathPrevious stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
             if (self.audioPlayer.isPlaying)
             {
                 [self.audioPlayer stop];
             }
             
             self.audioPlayer = nil;
+            
+            // 同一个文件时，停止播放后不再开始开始
+            NSRange range = [pathPrevious rangeOfString:filePath];
+            if (range.location != NSNotFound)
+            {
+                return;
+            }
         }
         
         if (self.audioPlayer == nil)
         {
+            self.durationTotal = 0.0;
+            self.duration = 0.0;
+            
             NSError *error;
             self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
             
@@ -94,17 +126,27 @@
             self.audioPlayer.currentTime = 0.0;
             
             self.audioPlayer.delegate = self;
-            
+
             [self.audioPlayer prepareToPlay];
             [self.audioPlayer play];
+            
+            self.durationTotal = self.audioPlayer.duration;
+            [self fileReadAuionDuration];
         }
     }
 }
+
+#pragma mark 代理方法
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
     // 播放结束时执行的动作
     self.audioPlayer = nil;
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    
+    NSNumber *number = [NSNumber numberWithFloat:0.0];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioDurationValueChangeNotificationName object:number];
 }
 
 - (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
@@ -123,6 +165,18 @@
 {
     // 处理中断结束的代码
     [self.audioPlayer stop];
+}
+
+#pragma mark 回调方法
+
+- (void)fileReadAuionDuration
+{
+    self.duration = self.audioPlayer.currentTime;
+    NSTimeInterval progress = self.duration / self.durationTotal;
+    NSNumber *number = [NSNumber numberWithFloat:progress];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioDurationValueChangeNotificationName object:number];
+
+//    [self performSelector:@selector(fileReadAuionDuration) withObject:nil afterDelay:0.5];
 }
 
 #pragma mark - 文件阅读

@@ -12,23 +12,24 @@
 
 static NSString *const SYCacheFileTitle = @"缓存文件";
 
+static NSString *const SYCacheFileAudioDurationValueChangeNotificationName = @"AudioDurationValueChangeNotificationName";
 
 /**
  *  默认显示文件
  *  视频：.avi、.dat、.mkv、.flv、.vob、.mp4、.m4v、.mpg、.mpeg、.mpe、.3pg、.mov、.swf、.wmv、.asf、.asx、.rm、.rmvb
  *  音频：.wav、.aif、.au、.mp3、.ram、.wma、.mmf、.amr、.aac、.flac、.midi、.mp3、.oog、.cd、.asf、.rm、.real、.ape、.vqf
  *  图片：.jpg、.png、.jpeg、.gif、.bmp
- *  文档：.txt、.sh、.doc、.docx、.xls、.xlsx、.pdf、.hlp、.wps、.rtf、.html、.iso、.rar、.zip、.exe、.mdf、.ppt、.pptx
+ *  文档：.txt、.sh、.doc、.docx、.xls、.xlsx、.pdf、.hlp、.wps、.rtf、.html、@".htm", .iso、.rar、.zip、.exe、.mdf、.ppt、.pptx
  */
 
 /// 视频文件
-#define SYCacheFileTypeVideoArray @[@".avi", @".dat", @".mkv", @".flv", @".vob", @".mp4", @".m4v", @".mpg", @".mpeg", @".mpe", @".3pg", @".mov", @".swf", @".wmv", @".asf", @".asx", @".rm", @".rmvb"]
+#define SYCacheFileVideoArray @[@".avi", @".dat", @".mkv", @".flv", @".vob", @".mp4", @".m4v", @".mpg", @".mpeg", @".mpe", @".3pg", @".mov", @".swf", @".wmv", @".asf", @".asx", @".rm", @".rmvb"]
 /// 音频文件
-#define SYCacheFileTypeAudioArray @[@".wav", @".aif", @".au", @".mp3", @".ram", @".wma", @".mmf", @".amr", @".aac", @".flac", @".midi", @".mp3", @".oog", @".cd", @".asf", @".rm", @".real", @".ape", @".vqf"]
+#define SYCacheFileAudioArray @[@".wav", @".aif", @".au", @".mp3", @".ram", @".wma", @".mmf", @".amr", @".aac", @".flac", @".midi", @".mp3", @".oog", @".cd", @".asf", @".rm", @".real", @".ape", @".vqf"]
 /// 图片文件
-#define SYCacheFileTypeImageArray @[@".jpg", @".png", @".jpeg", @".gif", @".bmp"]
+#define SYCacheFileImageArray @[@".jpg", @".png", @".jpeg", @".gif", @".bmp"]
 /// 文档文件
-#define SYCacheFileTypeDocumentArray @[@".txt", @".sh", @".doc", @".docx", @".xls", @".xlsx", @".pdf", @".hlp", @".wps", @".rtf", @".html", @".iso", @".rar", @".zip", @".exe", @".mdf", @".ppt", @".pptx"]
+#define SYCacheFileDocumentArray @[@".txt", @".sh", @".doc", @".docx", @".xls", @".xlsx", @".pdf", @".hlp", @".wps", @".rtf", @".html", @".htm", @".iso", @".rar", @".zip", @".exe", @".mdf", @".ppt", @".pptx"]
 
 
 

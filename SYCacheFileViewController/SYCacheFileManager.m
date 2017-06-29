@@ -63,10 +63,10 @@
 + (NSArray *)fileTypeArray
 {
     NSMutableArray *array = [NSMutableArray array];
-    [array addObjectsFromArray:SYCacheFileTypeVideoArray];
-    [array addObjectsFromArray:SYCacheFileTypeAudioArray];
-    [array addObjectsFromArray:SYCacheFileTypeImageArray];
-    [array addObjectsFromArray:SYCacheFileTypeDocumentArray];
+    [array addObjectsFromArray:SYCacheFileVideoArray];
+    [array addObjectsFromArray:SYCacheFileAudioArray];
+    [array addObjectsFromArray:SYCacheFileImageArray];
+    [array addObjectsFromArray:SYCacheFileDocumentArray];
     
     return array;
 }
@@ -98,19 +98,19 @@
 {
     NSString *fileType = [self fileTypeWithFilePath:filePath];
     SYCacheFileType type = SYCacheFileTypeUnknow;
-    if ([SYCacheFileTypeVideoArray containsObject:fileType])
+    if ([SYCacheFileVideoArray containsObject:fileType])
     {
         type = SYCacheFileTypeVideo;
     }
-    else if ([SYCacheFileTypeAudioArray containsObject:fileType])
+    else if ([SYCacheFileAudioArray containsObject:fileType])
     {
         type = SYCacheFileTypeAudio;
     }
-    else if ([SYCacheFileTypeImageArray containsObject:fileType])
+    else if ([SYCacheFileImageArray containsObject:fileType])
     {
         type = SYCacheFileTypeImage;
     }
-    else if ([SYCacheFileTypeDocumentArray containsObject:fileType])
+    else if ([SYCacheFileDocumentArray containsObject:fileType])
     {
         type = SYCacheFileTypeDocument;
     }
@@ -140,15 +140,15 @@
         else
         {
             NSString *fileType = [self fileTypeWithFilePath:filePath];
-            if ([SYCacheFileTypeImageArray containsObject:fileType])
+            if ([SYCacheFileImageArray containsObject:fileType])
             {
                 image = [UIImage imageNamed:@"image_cacheFile"];
             }
-            else if ([SYCacheFileTypeVideoArray containsObject:fileType])
+            else if ([SYCacheFileVideoArray containsObject:fileType])
             {
                 image = [UIImage imageNamed:@"video_cacheFile"];
             }
-            else if ([SYCacheFileTypeAudioArray containsObject:fileType])
+            else if ([SYCacheFileAudioArray containsObject:fileType])
             {
                 image = [UIImage imageNamed:@"audio_cacheFile"];
             }

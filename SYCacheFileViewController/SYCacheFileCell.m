@@ -20,12 +20,12 @@ static CGFloat const heightDetail = 20.0;
 
 @interface SYCacheFileCell ()
 
-/// 图标
+@property (nonatomic, strong) UIView *backView;
 @property (nonatomic, strong) UIImageView *typeImageView;
-/// 标题
 @property (nonatomic, strong) UILabel *typeTitleLabel;
-/// 详情标题
 @property (nonatomic, strong) UILabel *typeDetailLabel;
+
+@property (nonatomic, strong) UIProgressView *progressView;
 
 @end
 
@@ -59,19 +59,26 @@ static CGFloat const heightDetail = 20.0;
     return self;
 }
 
+- (void)dealloc
+{
+    [self removeNotificationDuration];
+    
+    NSLog(@"<-- %@ 被释放了-->" , [self class]);
+}
+
 #pragma mark - 视图
 
 - (void)setUI
 {
-    UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, widthScreen, heightSYCacheDirectoryCell)];
-    backView.backgroundColor = [UIColor whiteColor];
-    [self.contentView addSubview:backView];
+    _backView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, widthScreen, heightSYCacheDirectoryCell)];
+    _backView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:_backView];
     
     self.typeImageView = [[UIImageView alloc] initWithFrame:frameImage];
     self.typeImageView.backgroundColor = [UIColor clearColor];
     self.typeImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.typeImageView.clipsToBounds = YES;
-    [backView addSubview:self.typeImageView];
+    [_backView addSubview:self.typeImageView];
     
     CGFloat originTitle = (originXY + sizeImage + originXY);
     CGFloat widthTitle = (widthScreen - originXY - sizeImage * 1.5 - originXY - originXY);
@@ -81,13 +88,46 @@ static CGFloat const heightDetail = 20.0;
     self.typeTitleLabel.font = [UIFont systemFontOfSize:13.0];
     self.typeTitleLabel.textColor = [UIColor blackColor];
     self.typeTitleLabel.numberOfLines = 2;
-    [backView addSubview:self.typeTitleLabel];
+    [_backView addSubview:self.typeTitleLabel];
     
-    self.typeDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(originTitle, (backView.frame.size.height - heightDetail - originXY / 2), widthTitle, heightDetail)];
+    self.typeDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(originTitle, (_backView.frame.size.height - heightDetail - originXY / 2), widthTitle, heightDetail)];
     self.typeDetailLabel.backgroundColor = [UIColor clearColor];
     self.typeDetailLabel.font = [UIFont systemFontOfSize:11.0];
     self.typeDetailLabel.textColor = [UIColor lightGrayColor];
-    [backView addSubview:self.typeDetailLabel];
+    [_backView addSubview:self.typeDetailLabel];
+}
+
+#pragma mark - methord
+
+- (void)addNotificationDuration
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetAudioProgress:) name:SYCacheFileAudioDurationValueChangeNotificationName object:nil];
+}
+
+- (void)removeNotificationDuration
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)resetAudioProgress:(NSNotification *)notification
+{
+    NSNumber *number = notification.object;
+    NSTimeInterval progress = number.floatValue;
+    self.progressView.progress = progress;
+}
+
+#pragma mark - getter
+
+- (UIProgressView *)progressView
+{
+    if (_progressView == nil)
+    {
+        _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+        _progressView.progressTintColor = [UIColor redColor];
+        _progressView.frame = CGRectMake(0.0, (_backView.frame.size.height - 2.0), _backView.frame.size.width, 2.0);
+        [_backView addSubview:_progressView];
+    }
+    return _progressView;
 }
 
 #pragma mark - setter
@@ -107,6 +147,18 @@ static CGFloat const heightDetail = 20.0;
         // 大小
         NSString *sizeText = _model.fileSize;
         self.typeDetailLabel.text = sizeText;
+        
+        SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:_model.filePath];
+        if (type == SYCacheFileTypeAudio)
+        {
+            self.progressView.hidden = NO;
+            [self addNotificationDuration];
+        }
+        else
+        {
+            self.progressView.hidden = YES;
+            [self removeNotificationDuration];
+        }
     }
 }
 
