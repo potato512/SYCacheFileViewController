@@ -72,6 +72,26 @@
 }
 
 /**
+ *  判断是否是系统文件夹
+ *
+ *  @param filePath 文件路径
+ *
+ *  @return BOOL
+ */
++ (BOOL)isFileSystemWithFilePath:(NSString *)filePath
+{
+    for (NSString *file in SYCacheFileSystemArray)
+    {
+        if ([filePath hasSuffix:file])
+        {
+            return YES;
+            break;
+        }
+    }
+    return NO;
+}
+
+/**
  *  筛选所需类型文件
  *
  *  @param type 文件类型
@@ -518,8 +538,10 @@
  *  删除指定目录的所有文件
  *
  *  @param directory 指定目录
+ *
+ *  @return BOOL
  */
-+ (void)deleteFileWithDirectory:(NSString *)directory
++ (BOOL)deleteFileWithDirectory:(NSString *)directory;
 {
 //    NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directory error:nil];
 //    for (NSString *file in array)
@@ -536,7 +558,7 @@
 //        }
 //    }
     
-    [self deleteFileWithFilePath:directory];
+    return [self deleteFileWithFilePath:directory];
 }
 
 #pragma mark 文件复制

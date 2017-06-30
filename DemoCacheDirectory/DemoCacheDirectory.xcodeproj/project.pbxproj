@@ -40,6 +40,7 @@
 		A760EE6E1F03B44E00594860 /* folder_cacheFile.png in Resources */ = {isa = PBXBuildFile; fileRef = A760EE6B1F03B44E00594860 /* folder_cacheFile.png */; };
 		A760EE6F1F03B44E00594860 /* folder_cacheFile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A760EE6C1F03B44E00594860 /* folder_cacheFile@2x.png */; };
 		A760EE701F03B44E00594860 /* folder_cacheFile@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A760EE6D1F03B44E00594860 /* folder_cacheFile@3x.png */; };
+		A7C33F3F1F063E16007B4BC4 /* line_cacheFile.png in Resources */ = {isa = PBXBuildFile; fileRef = A7C33F3E1F063E16007B4BC4 /* line_cacheFile.png */; };
 		A7F0F0B21F022DEA001E482B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F0F0B11F022DEA001E482B /* main.m */; };
 		A7F0F0B51F022DEA001E482B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F0F0B41F022DEA001E482B /* AppDelegate.m */; };
 		A7F0F0B81F022DEA001E482B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F0F0B71F022DEA001E482B /* ViewController.m */; };
@@ -108,6 +109,7 @@
 		A760EE6B1F03B44E00594860 /* folder_cacheFile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder_cacheFile.png; sourceTree = "<group>"; };
 		A760EE6C1F03B44E00594860 /* folder_cacheFile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "folder_cacheFile@2x.png"; sourceTree = "<group>"; };
 		A760EE6D1F03B44E00594860 /* folder_cacheFile@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "folder_cacheFile@3x.png"; sourceTree = "<group>"; };
+		A7C33F3E1F063E16007B4BC4 /* line_cacheFile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line_cacheFile.png; sourceTree = "<group>"; };
 		A7F0F0AD1F022DEA001E482B /* DemoCacheDirectory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoCacheDirectory.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7F0F0B11F022DEA001E482B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A7F0F0B31F022DEA001E482B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 		A760EE2E1F03A57300594860 /* SYCacheFileImages */ = {
 			isa = PBXGroup;
 			children = (
+				A7C33F3E1F063E16007B4BC4 /* line_cacheFile.png */,
 				A760EE6B1F03B44E00594860 /* folder_cacheFile.png */,
 				A760EE6C1F03B44E00594860 /* folder_cacheFile@2x.png */,
 				A760EE6D1F03B44E00594860 /* folder_cacheFile@3x.png */,
@@ -382,6 +385,7 @@
 				A760EE4F1F03A57300594860 /* audio_cacheFile@2x.png in Resources */,
 				A760EE581F03A57300594860 /* image_cacheFile@2x.png in Resources */,
 				A760EE6F1F03B44E00594860 /* folder_cacheFile@2x.png in Resources */,
+				A7C33F3F1F063E16007B4BC4 /* line_cacheFile.png in Resources */,
 				A760EE521F03A57300594860 /* doc_cacheFile@2x.png in Resources */,
 				A760EE531F03A57300594860 /* doc_cacheFile@3x.png in Resources */,
 				A760EE541F03A57300594860 /* file_cacheFile.png in Resources */,

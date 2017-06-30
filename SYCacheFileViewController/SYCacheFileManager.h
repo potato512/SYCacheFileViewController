@@ -24,6 +24,15 @@
 #pragma mark - 文件类型
 
 /**
+ *  判断是否是系统文件夹
+ *
+ *  @param filePath 文件路径
+ *
+ *  @return BOOL
+ */
++ (BOOL)isFileSystemWithFilePath:(NSString *)filePath;
+
+/**
  *  筛选所需类型文件
  *
  *  @param type 文件类型
@@ -239,8 +248,10 @@
  *  删除指定目录的所有文件
  *
  *  @param directory 指定目录
+ *
+ *  @return BOOL
  */
-+ (void)deleteFileWithDirectory:(NSString *)directory;
++ (BOOL)deleteFileWithDirectory:(NSString *)directory;
 
 #pragma mark 文件复制
 

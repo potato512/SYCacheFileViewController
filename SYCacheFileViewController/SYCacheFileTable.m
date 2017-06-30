@@ -27,9 +27,7 @@
         self.backgroundColor = [UIColor clearColor];
         self.tableFooterView = [UIView new];
         
-        self.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        self.separatorInset = UIEdgeInsetsMake(0.0, -50.0, 0.0, 0.0);
-        self.layoutMargins = UIEdgeInsetsMake(0.0, -50.0, 0.0, 0.0);
+        self.separatorStyle = UITableViewCellSeparatorStyleNone;
 
         [self registerClass:[SYCacheFileCell class] forCellReuseIdentifier:reuseSYCacheDirectoryCell];
         
@@ -67,6 +65,8 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     SYCacheFileModel *model = self.cacheDatas[indexPath.row];
+    
+    // 音频播放
     SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:model.filePath];
     if (SYCacheFileTypeAudio == type)
     {
@@ -87,6 +87,7 @@
         self.previousIndex = indexPath;
     }
 
+    // 回调响应
     if (self.itemClick)
     {
         self.itemClick(indexPath);
@@ -95,6 +96,38 @@
 
 #pragma mark 编辑
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        SYCacheFileModel *model = self.cacheDatas[indexPath.row];
+        // 系统数据不可删除
+        if ([SYCacheFileManager isFileSystemWithFilePath:model.filePath])
+        {
+            [[[UIAlertView alloc] initWithTitle:nil message:@"系统文件不能删除" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil] show];
+            return;
+        }
+        
+        // 删除数据：删除数组、删除本地文件/文件夹、刷新页面、发通知刷新文件大小统计
+        // 删除数组
+        [self.cacheDatas removeObjectAtIndex:indexPath.row];
+        // 删除本地文件/文件夹
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            BOOL isDelete = [SYCacheFileManager deleteFileWithDirectory:model.filePath];
+        });
+        // 刷新页面
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }
+}
 
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"删除";
+}
 
 @end

@@ -48,9 +48,6 @@ static CGFloat const heightDetail = 20.0;
     {
         self.backgroundColor = [UIColor whiteColor];
         self.backgroundView.backgroundColor = [UIColor whiteColor];
-        
-        self.separatorInset = UIEdgeInsetsMake(0.0, -50.0, 0.0, 0.0);;
-        self.layoutMargins = UIEdgeInsetsMake(0.0, -50.0, 0.0, 0.0);
    
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
   
@@ -95,6 +92,11 @@ static CGFloat const heightDetail = 20.0;
     self.typeDetailLabel.font = [UIFont systemFontOfSize:11.0];
     self.typeDetailLabel.textColor = [UIColor lightGrayColor];
     [_backView addSubview:self.typeDetailLabel];
+    
+    UIImageView *lineImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, (_backView.frame.size.height - 0.5), _backView.frame.size.width, 0.5)];
+    lineImage.backgroundColor = [UIColor clearColor];
+    lineImage.image = [UIImage imageNamed:@"line_cacheFile"];
+    [_backView addSubview:lineImage];
 }
 
 #pragma mark - methord

@@ -150,9 +150,7 @@
     self.audioPlayer = nil;
     
     [self releaseSYCacheFileRead];
-    
-    NSNumber *number = [NSNumber numberWithFloat:0.0];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioDurationValueChangeNotificationName object:number];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioStopNotificationName object:nil];
 }
 
 - (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error

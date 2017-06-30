@@ -73,7 +73,13 @@
     [self.view addSubview:self.cacheTable];
     self.cacheTable.frame = self.view.bounds;
     
+    // 点击
     self.cacheTable.itemClick = ^(NSIndexPath *indexPath) {
+        
+        if (weakSelf.cacheTable.isEditing)
+        {
+            return ;
+        }
         
         SYCacheFileModel *model = weakSelf.cacheArray[indexPath.row];
         // 路径
