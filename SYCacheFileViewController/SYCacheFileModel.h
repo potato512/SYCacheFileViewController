@@ -20,5 +20,9 @@
 
 /// 文件类型（1视频、2音频、3图片、4文档）
 @property (nonatomic, assign) SYCacheFileType fileType;
+/// 音频文件进度
+@property (nonatomic, assign) float fileProgress;
+/// 音频文件进度显示
+@property (nonatomic, assign) BOOL fileProgressShow;
 
 @end

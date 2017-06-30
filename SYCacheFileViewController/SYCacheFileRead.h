@@ -18,4 +18,9 @@
  */
 - (void)fileReadWithFilePath:(NSString *)filePath target:(id)target;
 
+/**
+ *  内存释放
+ */
+- (void)releaseSYCacheFileRead;
+
 @end

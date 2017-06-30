@@ -62,7 +62,7 @@ static CGFloat const heightDetail = 20.0;
 - (void)dealloc
 {
     [self removeNotificationDuration];
-    
+
     NSLog(@"<-- %@ 被释放了-->" , [self class]);
 }
 
@@ -102,6 +102,8 @@ static CGFloat const heightDetail = 20.0;
 - (void)addNotificationDuration
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetAudioProgress:) name:SYCacheFileAudioDurationValueChangeNotificationName object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetAudioStop) name:SYCacheFileAudioStopNotificationName object:nil];
 }
 
 - (void)removeNotificationDuration
@@ -111,9 +113,26 @@ static CGFloat const heightDetail = 20.0;
 
 - (void)resetAudioProgress:(NSNotification *)notification
 {
-    NSNumber *number = notification.object;
-    NSTimeInterval progress = number.floatValue;
-    self.progressView.progress = progress;
+    if (self.model.fileProgressShow)
+    {
+        self.progressView.hidden = NO;
+        
+        NSNumber *number = notification.object;
+        NSTimeInterval progress = number.floatValue;
+        self.model.fileProgress = progress;
+        self.progressView.progress = progress;
+    }
+    else
+    {
+        self.progressView.hidden = YES;
+        self.progressView.progress = 0.0;
+    }
+}
+
+- (void)resetAudioStop
+{
+    self.progressView.hidden = YES;
+    self.progressView.progress = 0.0;
 }
 
 #pragma mark - getter
@@ -151,7 +170,8 @@ static CGFloat const heightDetail = 20.0;
         SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:_model.filePath];
         if (type == SYCacheFileTypeAudio)
         {
-            self.progressView.hidden = NO;
+            self.progressView.hidden = !_model.fileProgressShow;
+            self.progressView.progress = _model.fileProgress;
             [self addNotificationDuration];
         }
         else

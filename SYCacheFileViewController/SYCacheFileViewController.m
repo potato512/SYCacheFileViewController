@@ -55,6 +55,15 @@
     NSLog(@"<--- %@ 被释放了 --->", [self class]);
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if (self.fileRead)
+    {
+        [self.fileRead releaseSYCacheFileRead];
+    }
+}
+
 #pragma mark - 视图
 
 - (void)setUI

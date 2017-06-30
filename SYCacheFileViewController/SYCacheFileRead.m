@@ -42,8 +42,6 @@
 // 内存管理
 - (void)dealloc
 {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    
     if (self.audioPlayer)
     {
         if (self.audioPlayer.isPlaying)
@@ -60,6 +58,11 @@
     }
     
     NSLog(@"%@ 被释放了!", [self class]);
+}
+
+- (void)releaseSYCacheFileRead
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
 
 /**
@@ -95,6 +98,8 @@
         
         if (self.audioPlayer)
         {
+            [self releaseSYCacheFileRead];
+            
             NSString *pathPrevious = self.audioPlayer.url.relativeString;
             pathPrevious = [pathPrevious stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
@@ -104,11 +109,12 @@
             }
             
             self.audioPlayer = nil;
-            
+
             // 同一个文件时，停止播放后不再开始开始
             NSRange range = [pathPrevious rangeOfString:filePath];
             if (range.location != NSNotFound)
             {
+                [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioStopNotificationName object:nil];
                 return;
             }
         }
@@ -143,7 +149,7 @@
     // 播放结束时执行的动作
     self.audioPlayer = nil;
     
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self releaseSYCacheFileRead];
     
     NSNumber *number = [NSNumber numberWithFloat:0.0];
     [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioDurationValueChangeNotificationName object:number];
@@ -176,7 +182,8 @@
     NSNumber *number = [NSNumber numberWithFloat:progress];
     [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioDurationValueChangeNotificationName object:number];
 
-//    [self performSelector:@selector(fileReadAuionDuration) withObject:nil afterDelay:0.5];
+    NSLog(@"duration = %.2f, durationTotal = %.2f", self.duration, self.durationTotal);
+    [self performSelector:@selector(fileReadAuionDuration) withObject:nil afterDelay:1.0];
 }
 
 #pragma mark - 文件阅读

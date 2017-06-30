@@ -13,6 +13,8 @@
 
 @interface SYCacheFileTable () <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic, strong) NSIndexPath *previousIndex;
+
 @end
 
 @implementation SYCacheFileTable
@@ -64,10 +66,35 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    SYCacheFileModel *model = self.cacheDatas[indexPath.row];
+    SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:model.filePath];
+    if (SYCacheFileTypeAudio == type)
+    {
+        model.fileProgressShow = YES;
+        NSString *currentPath = model.filePath;
+        
+        if (self.previousIndex)
+        {
+            SYCacheFileModel *previousModel = self.cacheDatas[self.previousIndex.row];
+            NSString *previousPath = previousModel.filePath;
+            if (![currentPath isEqualToString:previousPath])
+            {
+                previousModel.fileProgress = 0.0;
+                previousModel.fileProgressShow = NO;
+            }
+        }
+        
+        self.previousIndex = indexPath;
+    }
+
     if (self.itemClick)
     {
         self.itemClick(indexPath);
     }
 }
+
+#pragma mark 编辑
+
+
 
 @end

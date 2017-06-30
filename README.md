@@ -1,8 +1,13 @@
 # SYCacheFileViewController
 缓存文件视图控制器
 
-* 查看：视频播放、音频播放、文档查看、图片查看……
-* 删除：文件
+
+* 显示指定目录下的子目录及文件；
+  * 子目录可以继续点击进入下级子目录，及显示下级文件；
+  * 文件可以点击查看，根据不格式进行展示，如音频播放、视频播放、doc/excel/ppt/pdf/txt等打开；
+* 目录与文件的删除操作
+
+
 
 ![SYCacheFileViewController.png](./images/SYCacheFileViewController.png)
 
@@ -21,15 +26,15 @@
 
 # 效果图-音频播放
 
-![cacheFile_File03.gif](./images/cacheFile_File03.gif)
+![cacheFile_audio.gif](./images/cacheFile_audio.gif)
 
 # 效果图-文档查看-word/excel/ppt/pdf
 
-![cacheFile_file01.gif](./images/cacheFile_file01.gif)
+![cacheFile_File01.gif](./images/cacheFile_File01.gif)
 
 # 效果图-文档查看：txt/htm/……
 
-![cacheFile_file02.gif](./images/cacheFile_file02.gif)
+![cacheFile_File02.gif](./images/cacheFile_File02.gif)
 
 
 

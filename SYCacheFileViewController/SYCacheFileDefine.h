@@ -13,6 +13,7 @@
 static NSString *const SYCacheFileTitle = @"缓存文件";
 
 static NSString *const SYCacheFileAudioDurationValueChangeNotificationName = @"AudioDurationValueChangeNotificationName";
+static NSString *const SYCacheFileAudioStopNotificationName = @"AudioStopNotificationName";
 
 /**
  *  默认显示文件
