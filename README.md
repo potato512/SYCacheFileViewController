@@ -75,11 +75,19 @@ cacheVC.cacheTitle = @"我的缓存文件";
 
 ~~~
 
+>
 > 特别说明：修改文件识别时，可以修改文件 SYCacheFileDefine.h 里的定义
+>
 > 1 修改音频文件类型：SYCacheFileAudioArray
+>
 > 2 修改视频文件类型：SYCacheFileVideoArray
+>
 > 3 修改文档类型：SYCacheFileDocumentArray
+>
 > 4 修改图片类型：SYCacheFileImageArray
+>
 > 5 修改系统文件类型：SYCacheFileSystemArray
+>
+>
 
 
