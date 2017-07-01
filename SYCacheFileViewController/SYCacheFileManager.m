@@ -543,78 +543,7 @@
  */
 + (BOOL)deleteFileWithDirectory:(NSString *)directory;
 {
-//    NSArray *array = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directory error:nil];
-//    for (NSString *file in array)
-//    {
-//        if ([self isFileDirectoryWithFilePath:file])
-//        {
-//            // 目录时循环调用
-//            [self deleteFileWithDirectory:file];
-//        }
-//        else
-//        {
-//            // 文件时进行删除
-//            [self deleteFileWithFilePath:file];
-//        }
-//    }
-    
     return [self deleteFileWithFilePath:directory];
-}
-
-#pragma mark 文件复制
-
-/**
- *  文件复制
- *
- *  @param fromPath 目标文件路径
- *  @param toPath   复制后文件路径
- *
- *  @return BOOL
- */
-+ (BOOL)copyFileWithFilePath:(NSString *)fromPath toPath:(NSString *)toPath
-{
-    if ([self isFileExists:fromPath])
-    {
-        return [[NSFileManager defaultManager] copyItemAtPath:fromPath toPath:toPath error:nil];
-    }
-    return NO;
-}
-
-#pragma mark 文件移动
-
-/**
- *  文件移动
- *
- *  @param fromPath 移动前位置
- *  @param toPath   移动后位置
- *
- *  @return BOOL
- */
-
-+ (BOOL)moveFileWithFilePath:(NSString *)fromPath toPath:(NSString *)toPath
-{
-    if ([self isFileExists:fromPath])
-    {
-        return [[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:nil];
-    }
-    return NO;
-}
-
-#pragma mark 文件重命名
-
-/**
- *  文件重新名
- *
- *  @param filePath 文件路径
- *  @param newName 文件新名称
- *
- *  @return BOOL
- */
-+ (BOOL)renameFileWithFilePath:(NSString *)filePath newName:(NSString *)newName
-{
-    // 相当于移动文件，只是在相同目录下移动，所以实现了重命名
-    NSString *newPath = [[filePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:newName];
-    return [self moveFileWithFilePath:filePath toPath:newPath];
 }
 
 #pragma mark - 文件信息
@@ -710,17 +639,7 @@
     __block double size = 0.0;
     if ([self isFileExists:directory])
     {
-        // 方法1
         NSArray *array = [self subPathsWithFilePath:directory];
-    
-        // 方法2
-//        NSDirectoryEnumerator *dirEnum = [[NSFileManager defaultManager] enumeratorAtPath:directory];
-//        NSMutableArray *array = [[NSMutableArray alloc] init];
-//        NSString *path = nil;
-//        while (path = [dirEnum nextObject])
-//        {
-//            [array addObject:path];
-//        }
         
         [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSString *filePath = [directory stringByAppendingPathComponent:obj];
@@ -731,10 +650,6 @@
             size += [self fileSizeNumberWithFilePath:filePath];
         }];
     }
-    
-    // 方法3
-//    const char *folderPath = [directory cStringUsingEncoding:NSUTF8StringEncoding];
-//    size = [self folderSizeAtPath:folderPath];
     
     return size;
 }
@@ -751,60 +666,5 @@
     double size = [self fileSizeTotalNumberWithDirectory:directory];
     return [self fileSizeStringConversionWithNumber:size];
 }
-
-// 遍历目录（注意添加头文件 #include <sys/stat.h> #include <dirent.h>）
-+ (long long)folderSizeAtPath:(const char *)folderPath
-{
-    long long folderSize = 0;
-    DIR *dir = opendir(folderPath);
-    if (dir == NULL)
-    {
-        return 0;
-    }
-    struct dirent *child;
-    while ((child = readdir(dir)) != NULL)
-    {
-        if (child->d_type == DT_DIR && (
-                                        (child->d_name[0] == '.' && child->d_name[1] == 0) || // 忽略目录 .
-                                        (child->d_name[0] == '.' && child->d_name[1] == '.' && child->d_name[2] == 0) // 忽略目录 ..
-                                        ))
-        {
-            continue;
-        }
-        
-        int folderPathLength = strlen(folderPath);
-        char childPath[1024]; // 子文件的路径地址
-        stpcpy(childPath, folderPath);
-        if (folderPath[folderPathLength-1] != '/')
-        {
-            childPath[folderPathLength] = '/';
-            folderPathLength++;
-        }
-        stpcpy(childPath+folderPathLength, child->d_name);
-        childPath[folderPathLength + child->d_namlen] = 0;
-        if (child->d_type == DT_DIR)
-        {
-            // directory
-            folderSize += [self folderSizeAtPath:childPath]; // 递归调用子目录
-            // 把目录本身所占的空间也加上
-            struct stat st;
-            if (lstat(childPath, &st) == 0)
-            {
-                folderSize += st.st_size;
-            }
-        }
-        else if (child->d_type == DT_REG || child->d_type == DT_LNK)
-        {
-            // file or link
-            struct stat st;
-            if (lstat(childPath, &st) == 0)
-            {
-                folderSize += st.st_size;
-            }
-        }
-    }
-    return folderSize;
-}
-
 
 @end
