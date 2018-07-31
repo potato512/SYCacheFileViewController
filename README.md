@@ -10,7 +10,6 @@
   * 系统文件及文件夹不可删除
 
 
-
 ![SYCacheFileViewController.png](./images/SYCacheFileViewController.png)
 
 
@@ -45,6 +44,13 @@
 
 ![cacheFile_delete.png](./images/cacheFile_delete.png)
 
+
+
+* 使用介绍
+  * 自动导入：使用命令`pod 'SYCacheFileViewController`导入到项目中
+  * 手动导入：或下载源码后，将源码添加到项目中
+  
+  
 # 使用示例
 ~~~ javascript
 
