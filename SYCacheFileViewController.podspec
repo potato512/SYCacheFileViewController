@@ -8,6 +8,6 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/potato512/SYCacheFileViewController.git", :tag => "#{s.version}" }
   s.source_files = "SYCacheFileViewController/*.{h,m}"
   s.resources    = 'SYCacheFileViewController/SYCacheFileImages/*.png'
-  s.frameworks   = "UIKit", "CoreFoundation", "AVFoundation"
+  s.ios.frameworks   = "UIKit", "Foundation", "AVFoundation"
   s.requires_arc = true
 end

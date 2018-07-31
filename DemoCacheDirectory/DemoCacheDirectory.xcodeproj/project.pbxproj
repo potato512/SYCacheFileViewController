@@ -40,6 +40,9 @@
 		A760EE6E1F03B44E00594860 /* folder_cacheFile.png in Resources */ = {isa = PBXBuildFile; fileRef = A760EE6B1F03B44E00594860 /* folder_cacheFile.png */; };
 		A760EE6F1F03B44E00594860 /* folder_cacheFile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A760EE6C1F03B44E00594860 /* folder_cacheFile@2x.png */; };
 		A760EE701F03B44E00594860 /* folder_cacheFile@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A760EE6D1F03B44E00594860 /* folder_cacheFile@3x.png */; };
+		A7845A5D2110765100239867 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7845A5C2110765100239867 /* UIKit.framework */; };
+		A7845A5F2110767A00239867 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7845A5E2110767A00239867 /* Foundation.framework */; };
+		A7845A612110767F00239867 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7845A602110767F00239867 /* AVFoundation.framework */; };
 		A7C33F3F1F063E16007B4BC4 /* line_cacheFile.png in Resources */ = {isa = PBXBuildFile; fileRef = A7C33F3E1F063E16007B4BC4 /* line_cacheFile.png */; };
 		A7F0F0B21F022DEA001E482B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F0F0B11F022DEA001E482B /* main.m */; };
 		A7F0F0B51F022DEA001E482B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F0F0B41F022DEA001E482B /* AppDelegate.m */; };
@@ -109,6 +112,9 @@
 		A760EE6B1F03B44E00594860 /* folder_cacheFile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder_cacheFile.png; sourceTree = "<group>"; };
 		A760EE6C1F03B44E00594860 /* folder_cacheFile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "folder_cacheFile@2x.png"; sourceTree = "<group>"; };
 		A760EE6D1F03B44E00594860 /* folder_cacheFile@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "folder_cacheFile@3x.png"; sourceTree = "<group>"; };
+		A7845A5C2110765100239867 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A7845A5E2110767A00239867 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A7845A602110767F00239867 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		A7C33F3E1F063E16007B4BC4 /* line_cacheFile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line_cacheFile.png; sourceTree = "<group>"; };
 		A7F0F0AD1F022DEA001E482B /* DemoCacheDirectory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoCacheDirectory.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7F0F0B11F022DEA001E482B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -133,6 +139,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7845A612110767F00239867 /* AVFoundation.framework in Frameworks */,
+				A7845A5F2110767A00239867 /* Foundation.framework in Frameworks */,
+				A7845A5D2110765100239867 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,6 +219,16 @@
 			path = SYCacheFileImages;
 			sourceTree = "<group>";
 		};
+		A7845A5B2110765100239867 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A7845A602110767F00239867 /* AVFoundation.framework */,
+				A7845A5E2110767A00239867 /* Foundation.framework */,
+				A7845A5C2110765100239867 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A7F0F0A41F022DEA001E482B = {
 			isa = PBXGroup;
 			children = (
@@ -217,6 +236,7 @@
 				A7F0F0C91F022DEA001E482B /* DemoCacheDirectoryTests */,
 				A7F0F0D41F022DEA001E482B /* DemoCacheDirectoryUITests */,
 				A7F0F0AE1F022DEA001E482B /* Products */,
+				A7845A5B2110765100239867 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

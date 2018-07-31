@@ -181,11 +181,11 @@
 /**
  *  文件，或文件夹是否存在
  *
- *  @param filepath 文件路径
+ *  @param filePath 文件路径
  *
  *  @return BOOL
  */
-+ (BOOL)isFileExists:(NSString *)filepath;
++ (BOOL)isFileExists:(NSString *)filePath;
 
 #pragma mark 文件写入
 
@@ -238,7 +238,7 @@
 /**
  *  删除指定文件路径的文件
  *
- *  @param filepath 文件路径
+ *  @param filePath 文件路径
  *
  *  @return BOOL
  */
