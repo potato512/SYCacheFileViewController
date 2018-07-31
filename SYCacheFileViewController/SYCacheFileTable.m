@@ -26,7 +26,7 @@
         self.backgroundColor = [UIColor clearColor];
         
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
-
+        
         [self registerClass:[SYCacheFileCell class] forCellReuseIdentifier:reuseSYCacheDirectoryCell];
         
         self.delegate = self;

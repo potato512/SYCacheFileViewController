@@ -5,9 +5,10 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/potato512/SYCacheFileViewController"
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = { "herman" => "zhangsy757@163.com" }
+  s.platform     = :ios, "8.0"
   s.source       = { :git => "https://github.com/potato512/SYCacheFileViewController.git", :tag => "#{s.version}" }
   s.source_files = "SYCacheFileViewController/*.{h,m}"
   s.resources    = 'SYCacheFileViewController/SYCacheFileImages/*.png'
-  s.ios.frameworks   = "UIKit", "Foundation", "AVFoundation"
+  s.frameworks   = "UIKit", "Foundation", "AVFoundation"
   s.requires_arc = true
 end
