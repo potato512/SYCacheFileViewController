@@ -281,7 +281,7 @@
 #pragma mark 文件重命名
 
 /**
- *  文件重新名
+ *  文件重命名
  *
  *  @param filePath 文件路径
  *  @param newName 文件新名称

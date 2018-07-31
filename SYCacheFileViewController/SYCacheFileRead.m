@@ -32,8 +32,7 @@
 - (id)init
 {
     self = [super init];
-    if (self)
-    {
+    if (self) {
         
     }
     return self;
@@ -42,18 +41,14 @@
 // 内存管理
 - (void)dealloc
 {
-    if (self.audioPlayer)
-    {
-        if (self.audioPlayer.isPlaying)
-        {
+    if (self.audioPlayer) {
+        if (self.audioPlayer.isPlaying) {
             [self.audioPlayer stop];
         }
-        
         self.audioPlayer = nil;
     }
     
-    if (self.documentController)
-    {
+    if (self.documentController) {
         self.documentController = nil;
     }
     
@@ -73,15 +68,11 @@
  */
 - (void)fileReadWithFilePath:(NSString *)filePath target:(id)target
 {
-    if (filePath && target)
-    {
+    if (filePath && target) {
         SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:filePath];
-        if (SYCacheFileTypeAudio == type)
-        {
+        if (SYCacheFileTypeAudio == type) {
             [self fileAudioReadWithFilePath:filePath target:target];
-        }
-        else
-        {
+        } else {
             [self fileDocumentReadWithFilePath:filePath target:target];
         }
     }
@@ -91,20 +82,17 @@
 
 - (void)fileAudioReadWithFilePath:(NSString *)filePath target:(id)target
 {
-    if (filePath && target)
-    {
+    if (filePath && target) {
         NSURL *url = [NSURL fileURLWithPath:filePath];
         self.controller = target;
         
-        if (self.audioPlayer)
-        {
+        if (self.audioPlayer) {
             [self releaseSYCacheFileRead];
             
             NSString *pathPrevious = self.audioPlayer.url.relativeString;
             pathPrevious = [pathPrevious stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
-            if (self.audioPlayer.isPlaying)
-            {
+            if (self.audioPlayer.isPlaying) {
                 [self.audioPlayer stop];
             }
             
@@ -112,15 +100,13 @@
 
             // 同一个文件时，停止播放后不再开始开始
             NSRange range = [pathPrevious rangeOfString:filePath];
-            if (range.location != NSNotFound)
-            {
+            if (range.location != NSNotFound) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioStopNotificationName object:nil];
                 return;
             }
         }
         
-        if (self.audioPlayer == nil)
-        {
+        if (self.audioPlayer == nil) {
             self.durationTotal = 0.0;
             self.duration = 0.0;
             
@@ -188,22 +174,17 @@
 
 - (void)fileDocumentReadWithFilePath:(NSString *)filePath target:(id)target
 {
-    if (filePath && target)
-    {
-        if (self.audioPlayer)
-        {
-            if (self.audioPlayer.isPlaying)
-            {
+    if (filePath && target) {
+        if (self.audioPlayer) {
+            if (self.audioPlayer.isPlaying) {
                 [self.audioPlayer stop];
             }
-            
             self.audioPlayer = nil;
         }
         
         NSURL *url = [NSURL fileURLWithPath:filePath];
         self.controller = target;
-        if (self.documentController == nil)
-        {
+        if (self.documentController == nil) {
             self.documentController = [UIDocumentInteractionController interactionControllerWithURL:url];
             self.documentController.delegate = self;
             [self.documentController presentPreviewAnimated:YES];

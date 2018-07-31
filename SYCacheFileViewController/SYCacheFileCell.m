@@ -33,6 +33,7 @@ static CGFloat const heightDetail = 20.0;
 
 - (void)awakeFromNib {
     // Initialization code
+    [super awakeFromNib];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -44,8 +45,7 @@ static CGFloat const heightDetail = 20.0;
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self)
-    {
+    if (self) {
         self.backgroundColor = [UIColor whiteColor];
         self.backgroundView.backgroundColor = [UIColor whiteColor];
    
@@ -115,17 +115,14 @@ static CGFloat const heightDetail = 20.0;
 
 - (void)resetAudioProgress:(NSNotification *)notification
 {
-    if (self.model.fileProgressShow)
-    {
+    if (self.model.fileProgressShow) {
         self.progressView.hidden = NO;
         
         NSNumber *number = notification.object;
         NSTimeInterval progress = number.floatValue;
         self.model.fileProgress = progress;
         self.progressView.progress = progress;
-    }
-    else
-    {
+    } else {
         self.progressView.hidden = YES;
         self.progressView.progress = 0.0;
     }
@@ -141,8 +138,7 @@ static CGFloat const heightDetail = 20.0;
 
 - (UIProgressView *)progressView
 {
-    if (_progressView == nil)
-    {
+    if (_progressView == nil) {
         _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         _progressView.progressTintColor = [UIColor redColor];
         _progressView.frame = CGRectMake(0.0, (_backView.frame.size.height - 2.0), _backView.frame.size.width, 2.0);
@@ -156,8 +152,7 @@ static CGFloat const heightDetail = 20.0;
 - (void)setModel:(SYCacheFileModel *)model
 {
     _model = model;
-    if (_model)
-    {
+    if (_model) {
         // 图标
         UIImage *image = [SYCacheFileManager fileTypeImageWithFilePath:_model.filePath];
         self.typeImageView.image = image;
@@ -170,14 +165,11 @@ static CGFloat const heightDetail = 20.0;
         self.typeDetailLabel.text = sizeText;
         
         SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:_model.filePath];
-        if (type == SYCacheFileTypeAudio)
-        {
+        if (type == SYCacheFileTypeAudio) {
             self.progressView.hidden = !_model.fileProgressShow;
             self.progressView.progress = _model.fileProgress;
             [self addNotificationDuration];
-        }
-        else
-        {
+        } else {
             self.progressView.hidden = YES;
             [self removeNotificationDuration];
         }

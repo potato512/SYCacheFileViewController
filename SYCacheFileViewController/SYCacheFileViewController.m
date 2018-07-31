@@ -40,8 +40,7 @@
 {
     [super loadView];
     self.view.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.1];
-    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)])
-    {
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
         
         self.navigationController.navigationBar.translucent = NO;
@@ -58,8 +57,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    if (self.fileRead)
-    {
+    if (self.fileRead) {
         [self.fileRead releaseSYCacheFileRead];
     }
 }
@@ -76,8 +74,7 @@
     // 点击
     self.cacheTable.itemClick = ^(NSIndexPath *indexPath) {
         
-        if (weakSelf.cacheTable.isEditing)
-        {
+        if (weakSelf.cacheTable.isEditing) {
             return ;
         }
         
@@ -86,8 +83,7 @@
         NSString *path = model.filePath;
         // 类型
         SYCacheFileType type = model.fileType;
-        if (SYCacheFileTypeUnknow == type)
-        {
+        if (SYCacheFileTypeUnknow == type) {
             // 标题
             NSString *title = model.fileName;
             // 子目录文件
@@ -97,9 +93,7 @@
             cacheVC.cacheTitle = title;
             cacheVC.cacheArray = (NSMutableArray *)files;
             [weakSelf.navigationController pushViewController:cacheVC animated:YES];
-        }
-        else
-        {
+        } else {
             [weakSelf.fileRead fileReadWithFilePath:path target:weakSelf];
         }
     };
@@ -111,16 +105,14 @@
 
 - (void)loadData
 {
-    if (self.cacheArray == nil)
-    {
+    if (self.cacheArray == nil) {
         // 初始化，首次显示总目录
         NSString *path = [SYCacheFileManager homeDirectoryPath];
         NSArray *array = [SYCacheFileManager fileModelsWithFilePath:path];
         self.cacheArray = [NSMutableArray arrayWithArray:array];
     }
     
-    if (self.cacheArray && 0 < self.cacheArray.count)
-    {
+    if (self.cacheArray && 0 < self.cacheArray.count) {
         self.cacheTable.cacheDatas = self.cacheArray;
         [self.cacheTable reloadData];
     }
@@ -130,8 +122,7 @@
 
 - (SYCacheFileTable *)cacheTable
 {
-    if (_cacheTable == nil)
-    {
+    if (_cacheTable == nil) {
         _cacheTable = [[SYCacheFileTable alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         _cacheTable.backgroundColor = [UIColor clearColor];
         _cacheTable.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -141,8 +132,7 @@
 
 - (SYCacheFileRead *)fileRead
 {
-    if (_fileRead == nil)
-    {
+    if (_fileRead == nil) {
         _fileRead = [[SYCacheFileRead alloc] init];
     }
     return _fileRead;

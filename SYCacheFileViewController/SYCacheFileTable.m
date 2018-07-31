@@ -22,10 +22,8 @@
 - (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
 {
     self = [super initWithFrame:frame style:style];
-    if (self)
-    {
+    if (self) {
         self.backgroundColor = [UIColor clearColor];
-        self.tableFooterView = [UIView new];
         
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
 
@@ -33,6 +31,8 @@
         
         self.delegate = self;
         self.dataSource = self;
+        
+        self.tableFooterView = [UIView new];
     }
     return self;
 }
@@ -68,17 +68,14 @@
     
     // 音频播放
     SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:model.filePath];
-    if (SYCacheFileTypeAudio == type)
-    {
+    if (SYCacheFileTypeAudio == type) {
         model.fileProgressShow = YES;
         NSString *currentPath = model.filePath;
         
-        if (self.previousIndex)
-        {
+        if (self.previousIndex) {
             SYCacheFileModel *previousModel = self.cacheDatas[self.previousIndex.row];
             NSString *previousPath = previousModel.filePath;
-            if (![currentPath isEqualToString:previousPath])
-            {
+            if (![currentPath isEqualToString:previousPath]) {
                 previousModel.fileProgress = 0.0;
                 previousModel.fileProgressShow = NO;
             }
@@ -88,8 +85,7 @@
     }
 
     // 回调响应
-    if (self.itemClick)
-    {
+    if (self.itemClick) {
         self.itemClick(indexPath);
     }
 }
@@ -98,12 +94,10 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete)
-    {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
         SYCacheFileModel *model = self.cacheDatas[indexPath.row];
         // 系统数据不可删除
-        if ([SYCacheFileManager isFileSystemWithFilePath:model.filePath])
-        {
+        if ([SYCacheFileManager isFileSystemWithFilePath:model.filePath]) {
             [[[UIAlertView alloc] initWithTitle:nil message:@"系统文件不能删除" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil] show];
             return;
         }
@@ -114,6 +108,7 @@
         // 删除本地文件/文件夹
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             BOOL isDelete = [SYCacheFileManager deleteFileWithDirectory:model.filePath];
+            NSLog(@"删除：%@", @(isDelete));
         });
         // 刷新页面
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];

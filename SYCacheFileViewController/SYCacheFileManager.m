@@ -25,28 +25,23 @@
 {
     NSArray *array = [SYCacheFileManager subFilesPathsWithFilePath:filePath];
     NSMutableArray *fileArray = [NSMutableArray arrayWithCapacity:array.count];
-    for (id object in array)
-    {
+    for (id object in array) {
         SYCacheFileModel *model = [SYCacheFileModel new];
         model.fileName = object;
         model.filePath = [filePath stringByAppendingPathComponent:object];
         
         SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:model.filePath];
-        if (SYCacheFileTypeUnknow == type)
-        {
+        if (SYCacheFileTypeUnknow == type) {
             // 过滤系统文件夹
             NSRange range = [model.filePath rangeOfString:@"." options:NSBackwardsSearch];
             if (range.location != NSNotFound)
             {
                 continue;
             }
-        }
-        else
-        {
+        } else {
             // 过滤系统文件
             NSString *typeName = [SYCacheFileManager fileTypeWithFilePath:model.filePath];
-            if (![SYCacheFileManager isFilterFileTypeWithFileType:typeName])
-            {
+            if (![SYCacheFileManager isFilterFileTypeWithFileType:typeName]) {
                 continue;
             }
         }
@@ -80,10 +75,8 @@
  */
 + (BOOL)isFileSystemWithFilePath:(NSString *)filePath
 {
-    for (NSString *file in SYCacheFileSystemArray)
-    {
-        if ([filePath hasSuffix:file])
-        {
+    for (NSString *file in SYCacheFileSystemArray) {
+        if ([filePath hasSuffix:file]) {
             return YES;
             break;
         }
@@ -100,8 +93,7 @@
  */
 + (BOOL)isFilterFileTypeWithFileType:(NSString *)type
 {
-    if ([[self fileTypeArray] containsObject:type])
-    {
+    if ([[self fileTypeArray] containsObject:type]) {
         return YES;
     }
     return NO;
@@ -118,20 +110,13 @@
 {
     NSString *fileType = [self fileTypeWithFilePath:filePath];
     SYCacheFileType type = SYCacheFileTypeUnknow;
-    if ([SYCacheFileVideoArray containsObject:fileType])
-    {
+    if ([SYCacheFileVideoArray containsObject:fileType]) {
         type = SYCacheFileTypeVideo;
-    }
-    else if ([SYCacheFileAudioArray containsObject:fileType])
-    {
+    } else if ([SYCacheFileAudioArray containsObject:fileType]) {
         type = SYCacheFileTypeAudio;
-    }
-    else if ([SYCacheFileImageArray containsObject:fileType])
-    {
+    } else if ([SYCacheFileImageArray containsObject:fileType]) {
         type = SYCacheFileTypeImage;
-    }
-    else if ([SYCacheFileDocumentArray containsObject:fileType])
-    {
+    } else if ([SYCacheFileDocumentArray containsObject:fileType]) {
         type = SYCacheFileTypeDocument;
     }
     
@@ -150,46 +135,27 @@
 + (UIImage *)fileTypeImageWithFilePath:(NSString *)filePath
 {
     UIImage *image = [UIImage imageNamed:@"folder_cacheFile"];
-    if (filePath && 0 < filePath.length)
-    {
+    if (filePath && 0 < filePath.length) {
         SYCacheFileType type = [self fileTypeReadWithFilePath:filePath];
-        if (SYCacheFileTypeUnknow == type)
-        {
+        if (SYCacheFileTypeUnknow == type) {
             image = [UIImage imageNamed:@"folder_cacheFile"];
-        }
-        else
-        {
+        } else {
             NSString *fileType = [self fileTypeWithFilePath:filePath];
-            if ([SYCacheFileImageArray containsObject:fileType])
-            {
+            if ([SYCacheFileImageArray containsObject:fileType]) {
                 image = [UIImage imageNamed:@"image_cacheFile"];
-            }
-            else if ([SYCacheFileVideoArray containsObject:fileType])
-            {
+            } else if ([SYCacheFileVideoArray containsObject:fileType]) {
                 image = [UIImage imageNamed:@"video_cacheFile"];
-            }
-            else if ([SYCacheFileAudioArray containsObject:fileType])
-            {
+            } else if ([SYCacheFileAudioArray containsObject:fileType]) {
                 image = [UIImage imageNamed:@"audio_cacheFile"];
-            }
-            else if ([@[@".doc", @".docx"] containsObject:fileType])
-            {
+            } else if ([@[@".doc", @".docx"] containsObject:fileType]) {
                 image = [UIImage imageNamed:@"doc_cacheFile"];
-            }
-            else if ([@[@".xls", @".xlsx"] containsObject:fileType])
-            {
+            } else if ([@[@".xls", @".xlsx"] containsObject:fileType]) {
                 image = [UIImage imageNamed:@"xls_cacheFile"];
-            }
-            else if ([@[@".pdf"] containsObject:fileType])
-            {
+            } else if ([@[@".pdf"] containsObject:fileType]) {
                 image = [UIImage imageNamed:@"pdf_cacheFile"];
-            }
-            else if ([@[@".ppt", @".pptx"] containsObject:fileType])
-            {
+            } else if ([@[@".ppt", @".pptx"] containsObject:fileType]) {
                 image = [UIImage imageNamed:@"ppt_cacheFile"];
-            }
-            else
-            {
+            } else {
                 image = [UIImage imageNamed:@"file_cacheFile"];
             }
         }
@@ -208,11 +174,9 @@
  */
 + (NSString *)fileNameWithFilePath:(NSString *)filePath
 {
-    if ([self isFileExists:filePath])
-    {
+    if ([self isFileExists:filePath]) {
         NSRange range = [filePath rangeOfString:@"/" options:NSBackwardsSearch];
-        if (range.location != NSNotFound)
-        {
+        if (range.location != NSNotFound) {
             NSString *text = [filePath substringFromIndex:(range.location + range.length)];
             return text;
         }
@@ -232,11 +196,9 @@
  */
 + (NSString *)fileTypeWithFilePath:(NSString *)filePath
 {
-    if ([self isFileExists:filePath])
-    {
+    if ([self isFileExists:filePath]) {
         NSRange range = [filePath rangeOfString:@"." options:NSBackwardsSearch];
-        if (range.location != NSNotFound)
-        {
+        if (range.location != NSNotFound) {
             NSString *text = [filePath substringFromIndex:(range.location)];
             return text;
         }
@@ -256,8 +218,7 @@
  */
 + (NSString *)fileTypeExtensionWithFilePath:(NSString *)filePath
 {
-    if ([self isFileExists:filePath])
-    {
+    if ([self isFileExists:filePath]) {
         NSString *text = filePath.pathExtension;
         return text;
     }
@@ -372,20 +333,14 @@
 {
     NSMutableArray *directions = [NSMutableArray array];
     NSArray *files = [[self class] subFilesPathsWithFilePath:filePath];
-    for (id object in files)
-    {
+    for (id object in files) {
         BOOL isDir = [[self class] isFileDirectoryWithFilePath:object];
-        if (isDirectory)
-        {
-            if (isDir)
-            {
+        if (isDirectory) {
+            if (isDir) {
                 [directions addObject:object];
             }
-        }
-        else
-        {
-            if (!isDir)
-            {
+        } else {
+            if (!isDir) {
                 [directions addObject:object];
             }
         }
@@ -438,8 +393,7 @@
 // 比如NSArray、NSDictionary、NSData、NSString都可以直接调用writeToFile方法写入文件
 + (BOOL)writeFileWithFilePath:(NSString *)filePath data:(id)data
 {
-    if (![self isFileExists:filePath])
-    {
+    if (![self isFileExists:filePath]) {
         filePath = [self newFilePathWithPath:filePath name:nil];
     }
     return [data writeToFile:filePath atomically:YES];
@@ -456,8 +410,7 @@
  */
 + (NSData *)readFileWithFilePath:(NSString *)filePath
 {
-    if ([self isFileExists:filePath])
-    {
+    if ([self isFileExists:filePath]) {
         return [[NSFileManager defaultManager] contentsAtPath:filePath];
     }
     return nil;
@@ -476,15 +429,12 @@
 + (NSString *)newFilePathWithPath:(NSString *)filePath name:(NSString *)fileName
 {
     NSString *fileDirectory = [filePath stringByAppendingPathComponent:fileName];
-    if ([self isFileExists:fileDirectory])
-    {
+    if ([self isFileExists:fileDirectory]) {
         NSLog(@"<--exist-->%@", fileDirectory);
-    }
-    else
-    {
+    } else {
         NSError *error;
-        if (![[NSFileManager defaultManager] createDirectoryAtPath:fileDirectory withIntermediateDirectories:YES attributes:nil error:&error])
-        {
+        BOOL isSuccessDirectory = [[NSFileManager defaultManager] createDirectoryAtPath:fileDirectory withIntermediateDirectories:YES attributes:nil error:&error];
+        if (!isSuccessDirectory) {
             NSLog(@"create dir error: %@", error.debugDescription);
             return nil;
         }
@@ -527,8 +477,7 @@
  */
 + (BOOL)deleteFileWithFilePath:(NSString *)filePath
 {
-    if ([self isFileExists:filePath])
-    {
+    if ([self isFileExists:filePath]) {
         return [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
     }
     return NO;
@@ -546,6 +495,70 @@
     return [self deleteFileWithFilePath:directory];
 }
 
+#pragma mark 文件复制
+
+/**
+ *  文件复制
+ *
+ *  @param fromPath 目标文件路径
+ *  @param toPath   复制后文件路径
+ *
+ *  @return BOOL
+ */
++ (BOOL)copyFileWithFilePath:(NSString *)fromPath toPath:(NSString *)toPath
+{
+    BOOL isSuccess = NO;
+    BOOL isExists = [[NSFileManager defaultManager] fileExistsAtPath:fromPath];
+    if (isExists) {
+        isSuccess = [[NSFileManager defaultManager] copyItemAtPath:fromPath toPath:toPath error:nil];
+    }
+    return isSuccess;
+}
+
+#pragma mark 文件移动
+
+/**
+ *  文件移动
+ *
+ *  @param fromPath 移动前位置
+ *  @param toPath   移动后位置
+ *
+ *  @return BOOL
+ */
+
++ (BOOL)moveFileWithFilePath:(NSString *)fromPath toPath:(NSString *)toPath
+{
+    BOOL isSuccess = NO;
+    BOOL isExists = [[NSFileManager defaultManager] fileExistsAtPath:fromPath];
+    if (isExists) {
+        isSuccess = [[NSFileManager defaultManager] moveItemAtPath:fromPath toPath:toPath error:nil];
+    }
+    return isSuccess;
+}
+
+#pragma mark 文件重命名
+
+/**
+ *  文件重命名
+ *
+ *  @param filePath 文件路径
+ *  @param newName 文件新名称
+ *
+ *  @return BOOL
+ */
++ (BOOL)renameFileWithFilePath:(NSString *)filePath newName:(NSString *)newName
+{
+    BOOL isSuccess = NO;
+    BOOL isExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    if (isExists) {
+        NSString *fileName = filePath.lastPathComponent;
+        NSString *filePathTmp = [filePath substringToIndex:(filePath.length - fileName.length)];
+        filePathTmp = [filePathTmp stringByAppendingPathComponent:newName];
+        isSuccess = [[NSFileManager defaultManager] moveItemAtPath:filePath toPath:filePathTmp error:nil];
+    }
+    return isSuccess;
+}
+
 #pragma mark - 文件信息
 
 /**
@@ -557,8 +570,7 @@
  */
 + (NSDictionary *)fileAttributesWithFilePath:(NSString *)filePath
 {
-    if ([self isFileExists:filePath])
-    {
+    if ([self isFileExists:filePath]) {
         return [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
     }
     return nil;
@@ -573,8 +585,7 @@
  */
 + (double)fileSizeNumberWithFilePath:(NSString *)filePath
 {
-    if ([self isFileExists:filePath])
-    {
+    if ([self isFileExists:filePath]) {
         return [[self fileAttributesWithFilePath:filePath] fileSize];
     }
     return 0.0;
@@ -595,18 +606,13 @@
     
     // 1MB = 1024KB 1KB = 1024B
     double size = fileSize;
-    if (size > (1024 * 1024))
-    {
+    if (size > (1024 * 1024)) {
         size = size / (1024 * 1024);
         message = [NSString stringWithFormat:@"%.2fM", size];
-    }
-    else if (size > 1024)
-    {
+    } else if (size > 1024) {
         size = size / 1024;
         message = [NSString stringWithFormat:@"%.2fKB", size];
-    }
-    else if (size > 0.0)
-    {
+    } else if (size > 0.0) {
         message = [NSString stringWithFormat:@"%.2fB", size];
     }
     
@@ -637,8 +643,7 @@
 + (double)fileSizeTotalNumberWithDirectory:(NSString *)directory
 {
     __block double size = 0.0;
-    if ([self isFileExists:directory])
-    {
+    if ([self isFileExists:directory]) {
         NSArray *array = [self subPathsWithFilePath:directory];
         
         [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

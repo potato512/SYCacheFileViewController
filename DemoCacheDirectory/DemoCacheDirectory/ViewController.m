@@ -67,8 +67,6 @@
 //    
 //    path = [SYCacheFileManager newFilePathWithPath:[SYCacheFileManager tmpDirectoryPath] name:@"Tmp001.png"];
 //    NSLog(@"path = %@", path);
-
-    
 }
 
 @end
