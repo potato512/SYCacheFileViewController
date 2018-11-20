@@ -21,7 +21,7 @@
 
 - (SYCacheFileType)fileType
 {
-    return [SYCacheFileManager fileTypeReadWithFilePath:self.filePath];
+    return [[SYCacheFileManager shareManager] fileTypeReadWithFilePath:self.filePath];
 }
 
 @end

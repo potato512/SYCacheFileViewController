@@ -69,37 +69,32 @@ SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
 
 ~~~ javascript
 
-// 实例化 自定义目录、标题
+// 自定义
 SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
+// 指定文件格式
+[SYCacheFileManager shareManager].cacheDocumentArray = @[@".pages", @"wps", @".xls", @".pdf", @".rar"];
+
 // 指定目录，或默认目录
 NSString *path = [SYCacheFileManager documentDirectoryPath];
-NSArray *array = [SYCacheFileManager fileModelsWithFilePath:path];
+NSArray *array = [[SYCacheFileManager shareManager] fileModelsWithFilePath:path];
 cacheVC.cacheArray = [NSMutableArray arrayWithArray:array];
+
 // 其它属性设置
 cacheVC.cacheTitle = @"我的缓存文件";
+
+//
 [self.navigationController pushViewController:cacheVC animated:YES];
-
 ~~~
-
->
-> 特别说明：修改文件识别时，可以修改文件 SYCacheFileDefine.h 里的定义
->
-> 1 修改音频文件类型：SYCacheFileAudioArray
->
-> 2 修改视频文件类型：SYCacheFileVideoArray
->
-> 3 修改文档类型：SYCacheFileDocumentArray
->
-> 4 修改图片类型：SYCacheFileImageArray
->
-> 5 修改系统文件类型：SYCacheFileSystemArray
->
->
 
 
 
 
 # 修改完善
+* 20181120
+  * 版本号：1.1.0
+  * 修改完善
+    * 添加自定义文件格式
+
 * 20180731
   * 版本号：1.0.0
   * 完善方法

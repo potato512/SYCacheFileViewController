@@ -154,7 +154,7 @@ static CGFloat const heightDetail = 20.0;
     _model = model;
     if (_model) {
         // 图标
-        UIImage *image = [SYCacheFileManager fileTypeImageWithFilePath:_model.filePath];
+        UIImage *image = [[SYCacheFileManager shareManager] fileTypeImageWithFilePath:_model.filePath];
         self.typeImageView.image = image;
         
         // 标题
@@ -164,7 +164,7 @@ static CGFloat const heightDetail = 20.0;
         NSString *sizeText = _model.fileSize;
         self.typeDetailLabel.text = sizeText;
         
-        SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:_model.filePath];
+        SYCacheFileType type = [[SYCacheFileManager shareManager] fileTypeReadWithFilePath:_model.filePath];
         if (type == SYCacheFileTypeAudio) {
             self.progressView.hidden = !_model.fileProgressShow;
             self.progressView.progress = _model.fileProgress;

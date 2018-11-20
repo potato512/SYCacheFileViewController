@@ -69,7 +69,7 @@
 - (void)fileReadWithFilePath:(NSString *)filePath target:(id)target
 {
     if (filePath && target) {
-        SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:filePath];
+        SYCacheFileType type = [[SYCacheFileManager shareManager] fileTypeReadWithFilePath:filePath];
         if (SYCacheFileTypeAudio == type) {
             [self fileAudioReadWithFilePath:filePath target:target];
         } else {

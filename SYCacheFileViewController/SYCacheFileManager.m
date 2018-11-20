@@ -12,7 +12,124 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
+@interface SYCacheFileManager ()
+
+/// 视频文件
+@property (nonatomic, strong) NSMutableArray *cacheVideoArrayUsing;
+/// 音频文件
+@property (nonatomic, strong) NSMutableArray *cacheAudioArrayUsing;
+/// 图片文件
+@property (nonatomic, strong) NSMutableArray *cacheImageArrayUsing;
+/// 文档文件
+@property (nonatomic, strong) NSMutableArray *cacheDocumentArrayUsing;
+
+/// 不能删除系统文件及文件夹
+@property (nonatomic, strong) NSArray *cacheSystemArrayUsing;
+
+@end
+
 @implementation SYCacheFileManager
+
+
++ (instancetype)shareManager
+{
+    static SYCacheFileManager *fileManager;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        fileManager = [[SYCacheFileManager alloc] init];
+    });
+    return fileManager;
+}
+
+#pragma mark - getter
+
+- (NSMutableArray *)cacheVideoArrayUsing
+{
+    if (_cacheVideoArrayUsing == nil) {
+        _cacheVideoArrayUsing = [[NSMutableArray alloc] initWithObjects:@".avi", @".dat", @".mkv", @".flv", @".vob", @".mp4", @".m4v", @".mpg", @".mpeg", @".mpe", @".3pg", @".mov", @".swf", @".wmv", @".asf", @".asx", @".rm", @".rmvb", nil];
+    }
+    return _cacheVideoArrayUsing;
+}
+
+- (NSMutableArray *)cacheAudioArrayUsing
+{
+    if (_cacheAudioArrayUsing == nil) {
+        _cacheAudioArrayUsing = [[NSMutableArray alloc] initWithObjects:@".wav", @".aif", @".au", @".mp3", @".ram", @".wma", @".mmf", @".amr", @".aac", @".flac", @".midi", @".mp3", @".oog", @".cd", @".asf", @".rm", @".real", @".ape", @".vqf", nil];
+    }
+    return _cacheAudioArrayUsing;
+}
+
+- (NSMutableArray *)cacheImageArrayUsing
+{
+    if (_cacheImageArrayUsing == nil) {
+        _cacheImageArrayUsing = [[NSMutableArray alloc] initWithObjects:@".jpg", @".png", @".jpeg", @".gif", @".bmp", nil];
+    }
+    return _cacheImageArrayUsing;
+}
+
+- (NSMutableArray *)cacheDocumentArrayUsing
+{
+    if (_cacheDocumentArrayUsing == nil) {
+        _cacheDocumentArrayUsing = [[NSMutableArray alloc] initWithObjects:@".txt", @".sh", @".doc", @".docx", @".xls", @".xlsx", @".pdf", @".hlp", @".wps", @".rtf", @".html", @".htm", @".iso", @".rar", @".zip", @".exe", @".mdf", @".ppt", @".pptx", nil];
+    }
+    return _cacheDocumentArrayUsing;
+}
+
+- (NSArray *)cacheSystemArrayUsing
+{
+    if (_cacheSystemArrayUsing == nil) {
+        _cacheSystemArrayUsing = @[@"/tmp", @"/Library/Preferences", @"/Library/Caches/Snapshots", @"/Library/Caches", @"/Library", @"/Documents"];
+    }
+    return _cacheSystemArrayUsing;
+}
+
+#pragma mark - setter
+
+- (void)setCacheVideoArray:(NSArray *)cacheVideoArray
+{
+    _cacheVideoArray = cacheVideoArray;
+    if (_cacheVideoArray.count > 0) {
+        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheVideoArray];
+        [array addObjectsFromArray:self.cacheVideoArrayUsing];
+        NSSet *set = [NSSet setWithArray:array];
+        self.cacheVideoArrayUsing = (NSMutableArray *)[set allObjects];
+    }
+}
+
+- (void)setCacheAudioArray:(NSArray *)cacheAudioArray
+{
+    _cacheAudioArray = cacheAudioArray;
+    if (_cacheAudioArray.count > 0) {
+        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheAudioArray];
+        [array addObjectsFromArray:self.cacheAudioArrayUsing];
+        NSSet *set = [NSSet setWithArray:array];
+        self.cacheAudioArrayUsing = (NSMutableArray *)[set allObjects];
+    }
+}
+
+- (void)setCacheImageArray:(NSArray *)cacheImageArray
+{
+    _cacheImageArray = cacheImageArray;
+    if (_cacheImageArray.count > 0) {
+        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheImageArray];
+        [array addObjectsFromArray:self.cacheImageArrayUsing];
+        NSSet *set = [NSSet setWithArray:array];
+        self.cacheImageArrayUsing = (NSMutableArray *)[set allObjects];
+    }
+}
+
+- (void)setCacheDocumentArray:(NSArray *)cacheDocumentArray
+{
+    _cacheDocumentArray = cacheDocumentArray;
+    if (_cacheDocumentArray.count > 0) {
+        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheDocumentArray];
+        [array addObjectsFromArray:self.cacheDocumentArrayUsing];
+        NSSet *set = [NSSet setWithArray:array];
+        self.cacheDocumentArrayUsing = (NSMutableArray *)[set allObjects];
+    }
+}
+
+#pragma mark -
 
 /**
  *  文件model
@@ -21,7 +138,7 @@
  *
  *  @return NSArray
  */
-+ (NSArray *)fileModelsWithFilePath:(NSString *)filePath
+- (NSArray *)fileModelsWithFilePath:(NSString *)filePath
 {
     NSArray *array = [SYCacheFileManager subFilesPathsWithFilePath:filePath];
     NSMutableArray *fileArray = [NSMutableArray arrayWithCapacity:array.count];
@@ -30,7 +147,7 @@
         model.fileName = object;
         model.filePath = [filePath stringByAppendingPathComponent:object];
         
-        SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:model.filePath];
+        SYCacheFileType type = [self fileTypeReadWithFilePath:model.filePath];
         if (SYCacheFileTypeUnknow == type) {
             // 过滤系统文件夹
             NSRange range = [model.filePath rangeOfString:@"." options:NSBackwardsSearch];
@@ -41,7 +158,7 @@
         } else {
             // 过滤系统文件
             NSString *typeName = [SYCacheFileManager fileTypeWithFilePath:model.filePath];
-            if (![SYCacheFileManager isFilterFileTypeWithFileType:typeName]) {
+            if (![self isFilterFileTypeWithFileType:typeName]) {
                 continue;
             }
         }
@@ -55,13 +172,13 @@
 
 #pragma mark - 文件类型
 
-+ (NSArray *)fileTypeArray
+- (NSArray *)fileTypeArray
 {
     NSMutableArray *array = [NSMutableArray array];
-    [array addObjectsFromArray:SYCacheFileVideoArray];
-    [array addObjectsFromArray:SYCacheFileAudioArray];
-    [array addObjectsFromArray:SYCacheFileImageArray];
-    [array addObjectsFromArray:SYCacheFileDocumentArray];
+    [array addObjectsFromArray:self.cacheVideoArrayUsing];
+    [array addObjectsFromArray:self.cacheAudioArrayUsing];
+    [array addObjectsFromArray:self.cacheImageArrayUsing];
+    [array addObjectsFromArray:self.cacheDocumentArrayUsing];
     
     return array;
 }
@@ -73,9 +190,9 @@
  *
  *  @return BOOL
  */
-+ (BOOL)isFileSystemWithFilePath:(NSString *)filePath
+- (BOOL)isFileSystemWithFilePath:(NSString *)filePath
 {
-    for (NSString *file in SYCacheFileSystemArray) {
+    for (NSString *file in self.cacheSystemArrayUsing) {
         if ([filePath hasSuffix:file]) {
             return YES;
             break;
@@ -91,9 +208,9 @@
  *
  *  @return BOOL
  */
-+ (BOOL)isFilterFileTypeWithFileType:(NSString *)type
+- (BOOL)isFilterFileTypeWithFileType:(NSString *)type
 {
-    if ([[self fileTypeArray] containsObject:type]) {
+    if ([self.fileTypeArray containsObject:type]) {
         return YES;
     }
     return NO;
@@ -106,20 +223,19 @@
  *
  *  @return SYCacheFileType
  */
-+ (SYCacheFileType)fileTypeReadWithFilePath:(NSString *)filePath
+- (SYCacheFileType)fileTypeReadWithFilePath:(NSString *)filePath
 {
-    NSString *fileType = [self fileTypeWithFilePath:filePath];
+    NSString *fileType = [SYCacheFileManager fileTypeWithFilePath:filePath];
     SYCacheFileType type = SYCacheFileTypeUnknow;
-    if ([SYCacheFileVideoArray containsObject:fileType]) {
+    if ([self.cacheVideoArrayUsing containsObject:fileType]) {
         type = SYCacheFileTypeVideo;
-    } else if ([SYCacheFileAudioArray containsObject:fileType]) {
+    } else if ([self.cacheAudioArrayUsing containsObject:fileType]) {
         type = SYCacheFileTypeAudio;
-    } else if ([SYCacheFileImageArray containsObject:fileType]) {
+    } else if ([self.cacheImageArrayUsing containsObject:fileType]) {
         type = SYCacheFileTypeImage;
-    } else if ([SYCacheFileDocumentArray containsObject:fileType]) {
+    } else if ([self.cacheDocumentArrayUsing containsObject:fileType]) {
         type = SYCacheFileTypeDocument;
     }
-    
     return type;
 }
 
@@ -132,7 +248,7 @@
  *
  *  @return UIImage
  */
-+ (UIImage *)fileTypeImageWithFilePath:(NSString *)filePath
+- (UIImage *)fileTypeImageWithFilePath:(NSString *)filePath
 {
     UIImage *image = [UIImage imageNamed:@"folder_cacheFile"];
     if (filePath && 0 < filePath.length) {
@@ -140,12 +256,12 @@
         if (SYCacheFileTypeUnknow == type) {
             image = [UIImage imageNamed:@"folder_cacheFile"];
         } else {
-            NSString *fileType = [self fileTypeWithFilePath:filePath];
-            if ([SYCacheFileImageArray containsObject:fileType]) {
+            NSString *fileType = [SYCacheFileManager fileTypeWithFilePath:filePath];
+            if ([self.cacheImageArrayUsing containsObject:fileType]) {
                 image = [UIImage imageNamed:@"image_cacheFile"];
-            } else if ([SYCacheFileVideoArray containsObject:fileType]) {
+            } else if ([self.cacheVideoArrayUsing containsObject:fileType]) {
                 image = [UIImage imageNamed:@"video_cacheFile"];
-            } else if ([SYCacheFileAudioArray containsObject:fileType]) {
+            } else if ([self.cacheAudioArrayUsing containsObject:fileType]) {
                 image = [UIImage imageNamed:@"audio_cacheFile"];
             } else if ([@[@".doc", @".docx"] containsObject:fileType]) {
                 image = [UIImage imageNamed:@"doc_cacheFile"];

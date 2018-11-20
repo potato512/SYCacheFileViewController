@@ -67,7 +67,7 @@
     SYCacheFileModel *model = self.cacheDatas[indexPath.row];
     
     // 音频播放
-    SYCacheFileType type = [SYCacheFileManager fileTypeReadWithFilePath:model.filePath];
+    SYCacheFileType type = [[SYCacheFileManager shareManager] fileTypeReadWithFilePath:model.filePath];
     if (SYCacheFileTypeAudio == type) {
         model.fileProgressShow = YES;
         NSString *currentPath = model.filePath;
@@ -97,7 +97,7 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         SYCacheFileModel *model = self.cacheDatas[indexPath.row];
         // 系统数据不可删除
-        if ([SYCacheFileManager isFileSystemWithFilePath:model.filePath]) {
+        if ([[SYCacheFileManager shareManager] isFileSystemWithFilePath:model.filePath]) {
             [[[UIAlertView alloc] initWithTitle:nil message:@"系统文件不能删除" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil] show];
             return;
         }

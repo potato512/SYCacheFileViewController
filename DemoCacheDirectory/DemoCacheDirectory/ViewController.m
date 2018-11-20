@@ -32,18 +32,27 @@
 
 - (void)buttonClick
 {
+    // 默认
+//    SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
+//    [self.navigationController pushViewController:cacheVC animated:YES];
+//
+//    NSString *path = [SYCacheFileManager homeDirectoryPath];
+//    NSLog(@"path = %@", path);
+
+    // 自定义
     SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
+    // 指定文件格式
+    [SYCacheFileManager shareManager].cacheDocumentArray = @[@".pages", @"wps", @".xls", @".pdf", @".rar"];
     // 指定目录，或默认目录
-//    NSString *path = [SYCacheFileManager documentDirectoryPath];
-//    NSArray *array = [SYCacheFileManager fileModelsWithFilePath:path];
-//    cacheVC.cacheArray = [NSMutableArray arrayWithArray:array];
+    NSString *path = [SYCacheFileManager documentDirectoryPath];
+    NSArray *array = [[SYCacheFileManager shareManager] fileModelsWithFilePath:path];
+    cacheVC.cacheArray = [NSMutableArray arrayWithArray:array];
     // 其它属性设置
     cacheVC.cacheTitle = @"我的缓存文件";
+    //
     [self.navigationController pushViewController:cacheVC animated:YES];
     
-    NSString *path = [SYCacheFileManager homeDirectoryPath];
-    NSLog(@"path = %@", path);
-//
+    
 //    path = [SYCacheFileManager documentDirectoryPath];
 //    NSLog(@"path = %@", path);
 //    

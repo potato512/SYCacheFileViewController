@@ -12,6 +12,17 @@
 
 @interface SYCacheFileManager : NSObject
 
++ (instancetype)shareManager;
+
+/// 视频文件（如：.mp4）
+@property (nonatomic, strong) NSArray *cacheVideoArray;
+/// 音频文件（如：.mp3）
+@property (nonatomic, strong) NSArray *cacheAudioArray;
+/// 图片文件（如：.png）
+@property (nonatomic, strong) NSArray *cacheImageArray;
+/// 文档文件（如：.txt）
+@property (nonatomic, strong) NSArray *cacheDocumentArray;
+
 /**
  *  文件model
  *
@@ -19,7 +30,7 @@
  *
  *  @return NSArray
  */
-+ (NSArray *)fileModelsWithFilePath:(NSString *)filePath;
+- (NSArray *)fileModelsWithFilePath:(NSString *)filePath;
 
 #pragma mark - 文件类型
 
@@ -30,7 +41,7 @@
  *
  *  @return BOOL
  */
-+ (BOOL)isFileSystemWithFilePath:(NSString *)filePath;
+- (BOOL)isFileSystemWithFilePath:(NSString *)filePath;
 
 /**
  *  筛选所需类型文件
@@ -39,7 +50,7 @@
  *
  *  @return BOOL
  */
-+ (BOOL)isFilterFileTypeWithFileType:(NSString *)type;
+- (BOOL)isFilterFileTypeWithFileType:(NSString *)type;
 
 /**
  *  判断文件类型
@@ -48,7 +59,7 @@
  *
  *  @return SYCacheFileType
  */
-+ (SYCacheFileType)fileTypeReadWithFilePath:(NSString *)filePath;
+- (SYCacheFileType)fileTypeReadWithFilePath:(NSString *)filePath;
 
 #pragma mark - 文件类型对应图标
 
@@ -59,7 +70,7 @@
  *
  *  @return UIImage
  */
-+ (UIImage *)fileTypeImageWithFilePath:(NSString *)filePath;
+- (UIImage *)fileTypeImageWithFilePath:(NSString *)filePath;
 
 #pragma mark - 文件名称与类型
 

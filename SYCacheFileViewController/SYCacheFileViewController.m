@@ -87,8 +87,7 @@
             // 标题
             NSString *title = model.fileName;
             // 子目录文件
-            NSArray *files = [SYCacheFileManager fileModelsWithFilePath:path];
-            
+            NSArray *files = [[SYCacheFileManager shareManager] fileModelsWithFilePath:path];
             SYCacheFileViewController *cacheVC = [SYCacheFileViewController new];
             cacheVC.cacheTitle = title;
             cacheVC.cacheArray = (NSMutableArray *)files;
@@ -108,7 +107,7 @@
     if (self.cacheArray == nil) {
         // 初始化，首次显示总目录
         NSString *path = [SYCacheFileManager homeDirectoryPath];
-        NSArray *array = [SYCacheFileManager fileModelsWithFilePath:path];
+        NSArray *array = [[SYCacheFileManager shareManager] fileModelsWithFilePath:path];
         self.cacheArray = [NSMutableArray arrayWithArray:array];
     }
     
