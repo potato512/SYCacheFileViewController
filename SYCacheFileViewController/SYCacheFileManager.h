@@ -23,6 +23,9 @@
 /// 文档文件（如：.txt）
 @property (nonatomic, strong) NSArray *cacheDocumentArray;
 
+/// 音视频文件浏览模式（默认NO）
+@property (nonatomic, assign) BOOL showDoucumentUI;
+
 /**
  *  文件model
  *

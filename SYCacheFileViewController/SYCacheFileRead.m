@@ -8,6 +8,9 @@
 
 #import "SYCacheFileRead.h"
 #import <AVFoundation/AVFoundation.h>
+// 视频
+#import <MediaPlayer/MediaPlayer.h>
+// 文档
 #import <QuickLook/QuickLook.h>
 
 #import "SYCacheFileManager.h"
@@ -20,6 +23,11 @@
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
 @property (nonatomic, assign) NSTimeInterval durationTotal;
 @property (nonatomic, assign) NSTimeInterval duration;
+
+// 视频播放
+@property (nonatomic, retain) MPMoviePlayerViewController *videoViewController;
+@property (nonatomic, strong) MPMoviePlayerController *videoController;
+@property (nonatomic, strong) NSURL *videoUrl;
 
 // 文档查看（文档、图片、视频）
 @property (nonatomic, strong) UIDocumentInteractionController *documentController;
@@ -41,13 +49,13 @@
 // 内存管理
 - (void)dealloc
 {
-    if (self.audioPlayer) {
-        if (self.audioPlayer.isPlaying) {
-            [self.audioPlayer stop];
-        }
-        self.audioPlayer = nil;
+    [self fileAudioStop];
+    //
+    if (self.videoController) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        [self.videoController stop];
     }
-    
+    //
     if (self.documentController) {
         self.documentController = nil;
     }
@@ -68,10 +76,23 @@
  */
 - (void)fileReadWithFilePath:(NSString *)filePath target:(id)target
 {
-    if (filePath && target) {
+    if (filePath == nil || ![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        [[[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"filePath指向文件不存在" delegate:@"知道了" cancelButtonTitle:nil otherButtonTitles:nil, nil] show];
+        return;
+    }
+    if (target == nil || ![target isKindOfClass:[UIViewController class]]) {
+        [[[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"target类型不是UIViewController" delegate:@"知道了" cancelButtonTitle:nil otherButtonTitles:nil, nil] show];
+        return;
+    }
+
+    if ([SYCacheFileManager shareManager].showDoucumentUI) {
+        [self fileDocumentReadWithFilePath:filePath target:target];
+    } else {
         SYCacheFileType type = [[SYCacheFileManager shareManager] fileTypeReadWithFilePath:filePath];
         if (SYCacheFileTypeAudio == type) {
             [self fileAudioReadWithFilePath:filePath target:target];
+        } else if (SYCacheFileTypeVideo == type) {
+            [self fileVidioReadWithFilePath:filePath target:target];
         } else {
             [self fileDocumentReadWithFilePath:filePath target:target];
         }
@@ -128,6 +149,21 @@
     }
 }
 
+- (void)fileAudioStop
+{
+    if (self.audioPlayer) {
+        if (self.audioPlayer.isPlaying) {
+            [self.audioPlayer stop];
+        }
+        self.audioPlayer = nil;
+        //
+        NSNumber *number = [NSNumber numberWithFloat:0.0];
+        [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioDurationValueChangeNotificationName object:number];
+        //
+        [self releaseSYCacheFileRead];
+    }
+}
+
 #pragma mark 代理方法
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
@@ -170,17 +206,55 @@
     [self performSelector:@selector(fileReadAuionDuration) withObject:nil afterDelay:1.0];
 }
 
+#pragma mark - 视频播放
+
+- (void)addNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieFinishedCallback:)
+                                                 name:MPMoviePlayerPlaybackDidFinishNotification
+                                               object:nil];
+}
+
+- (void)movieFinishedCallback:(NSNotification *)aNotification
+{
+    NSLog(@"movieFinishedCallback");
+    [self.videoController stop];
+    [self.controller dismissMoviePlayerViewControllerAnimated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark 视频播放
+
+/// 播放视频（网络地址，或本地路径，或本地文件名称）
+- (void)fileVidioReadWithFilePath:(NSString *)filePath target:(id)target
+{
+    [self fileAudioStop];
+    
+    self.videoUrl = [NSURL fileURLWithPath:filePath];
+    self.controller = target;
+    //
+    self.videoViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:self.videoUrl];
+    self.videoController = self.videoViewController.moviePlayer;
+    self.videoController.movieSourceType = MPMovieSourceTypeFile;
+    // 控制播放行为
+    self.videoController.controlStyle = MPMovieControlStyleFullscreen;
+    // 控制影片的尺寸
+    self.videoController.scalingMode = MPMovieScalingModeAspectFit;
+    // 自动播放
+    self.videoController.shouldAutoplay = YES;
+    //
+    [self addNotification];
+    [self.controller presentMoviePlayerViewControllerAnimated:self.videoViewController];
+    [self.videoController prepareToPlay];
+    [self.videoController play];
+}
+
 #pragma mark - 文件阅读
 
 - (void)fileDocumentReadWithFilePath:(NSString *)filePath target:(id)target
 {
     if (filePath && target) {
-        if (self.audioPlayer) {
-            if (self.audioPlayer.isPlaying) {
-                [self.audioPlayer stop];
-            }
-            self.audioPlayer = nil;
-        }
+        [self fileAudioStop];
         
         NSURL *url = [NSURL fileURLWithPath:filePath];
         self.controller = target;

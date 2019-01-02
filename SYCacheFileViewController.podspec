@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "SYCacheFileViewController"
-  s.version      = "1.1.0"
+  s.version      = "1.2.0"
   s.summary      = "SYCacheFileViewController used to manager cache file."
   s.homepage     = "https://github.com/potato512/SYCacheFileViewController"
   s.license      = { :type => "MIT", :file => "LICENSE" }
