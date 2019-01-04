@@ -9,7 +9,8 @@
 #import "SYCacheFileRead.h"
 #import <AVFoundation/AVFoundation.h>
 // 视频
-#import <MediaPlayer/MediaPlayer.h>
+#import <AVKit/AVKit.h>
+
 // 文档
 #import <QuickLook/QuickLook.h>
 
@@ -19,14 +20,15 @@
 
 @property (nonatomic, weak) UIViewController *controller;
 
+// 图片显示
+@property (nonatomic, strong) UIImageView *imageView;
+
 // 音频播放
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
 @property (nonatomic, assign) NSTimeInterval durationTotal;
 @property (nonatomic, assign) NSTimeInterval duration;
 
 // 视频播放
-@property (nonatomic, retain) MPMoviePlayerViewController *videoViewController;
-@property (nonatomic, strong) MPMoviePlayerController *videoController;
 @property (nonatomic, strong) NSURL *videoUrl;
 
 // 文档查看（文档、图片、视频）
@@ -50,16 +52,6 @@
 - (void)dealloc
 {
     [self fileAudioStop];
-    //
-    if (self.videoController) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-        [self.videoController stop];
-    }
-    //
-    if (self.documentController) {
-        self.documentController = nil;
-    }
-    
     NSLog(@"%@ 被释放了!", [self class]);
 }
 
@@ -93,6 +85,8 @@
             [self fileAudioReadWithFilePath:filePath target:target];
         } else if (SYCacheFileTypeVideo == type) {
             [self fileVidioReadWithFilePath:filePath target:target];
+        } else if (SYCacheFileTypeImage == type) {
+            [self fileImageReadWithFilePath:filePath target:target];
         } else {
             [self fileDocumentReadWithFilePath:filePath target:target];
         }
@@ -208,45 +202,58 @@
 
 #pragma mark - 视频播放
 
-- (void)addNotification
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieFinishedCallback:)
-                                                 name:MPMoviePlayerPlaybackDidFinishNotification
-                                               object:nil];
-}
-
-- (void)movieFinishedCallback:(NSNotification *)aNotification
-{
-    NSLog(@"movieFinishedCallback");
-    [self.videoController stop];
-    [self.controller dismissMoviePlayerViewControllerAnimated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-#pragma mark 视频播放
-
 /// 播放视频（网络地址，或本地路径，或本地文件名称）
 - (void)fileVidioReadWithFilePath:(NSString *)filePath target:(id)target
 {
-    [self fileAudioStop];
-    
-    self.videoUrl = [NSURL fileURLWithPath:filePath];
-    self.controller = target;
-    //
-    self.videoViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:self.videoUrl];
-    self.videoController = self.videoViewController.moviePlayer;
-    self.videoController.movieSourceType = MPMovieSourceTypeFile;
-    // 控制播放行为
-    self.videoController.controlStyle = MPMovieControlStyleFullscreen;
-    // 控制影片的尺寸
-    self.videoController.scalingMode = MPMovieScalingModeAspectFit;
-    // 自动播放
-    self.videoController.shouldAutoplay = YES;
-    //
-    [self addNotification];
-    [self.controller presentMoviePlayerViewControllerAnimated:self.videoViewController];
-    [self.videoController prepareToPlay];
-    [self.videoController play];
+    if (filePath && target) {
+        [self fileAudioStop];
+        
+        self.videoUrl = [NSURL fileURLWithPath:filePath];
+        self.controller = target;
+        //
+        AVPlayerViewController *playerController = [[AVPlayerViewController alloc] init];
+        playerController.player = [[AVPlayer alloc] initWithURL:self.videoUrl];
+        [playerController.player play];
+        [self.controller presentViewController:playerController animated:YES completion:nil];
+    }
+}
+
+#pragma mark - 图片播放
+
+- (void)fileImageReadWithFilePath:(NSString *)filePath target:(id)target
+{
+    if (filePath && target) {
+        self.controller = target;
+        UIImage *image = [[UIImage alloc] initWithContentsOfFile:filePath];
+        if (self.imageView == nil) {
+            self.imageView = [[UIImageView alloc] init];
+            self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+            self.imageView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
+            //
+            UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideClick:)];
+            self.imageView.userInteractionEnabled = YES;
+            [self.imageView addGestureRecognizer:tapRecognizer];
+            //
+            UIView *superView = [UIApplication sharedApplication].delegate.window;
+            self.imageView.frame = CGRectMake(0.0, superView.frame.size.height, superView.frame.size.width, superView.frame.size.height);
+            [superView addSubview:self.imageView];
+        }
+        self.imageView.image = image;
+        //
+        [UIView animateWithDuration:0.3 animations:^{
+            self.imageView.frame = CGRectMake(0.0, 0.0, self.imageView.frame.size.width, self.imageView.frame.size.height);
+        }];
+    }
+}
+
+- (void)hideClick:(UITapGestureRecognizer *)recognizer
+{
+    UIView *view = recognizer.view;
+    if (view && [view isKindOfClass:[UIImageView class]]) {
+        [UIView animateWithDuration:0.3 animations:^{
+            view.frame = CGRectMake(0.0, view.frame.size.height, view.frame.size.width, view.frame.size.height);
+        }];
+    }
 }
 
 #pragma mark - 文件阅读
