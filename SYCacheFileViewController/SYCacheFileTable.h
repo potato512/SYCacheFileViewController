@@ -15,5 +15,7 @@
 
 /// 响应回调
 @property (nonatomic, copy) void (^itemClick)(NSIndexPath *indexPath);
+/// 长按回调
+@property (nonatomic, copy) void (^longPress)(NSIndexPath *indexPath);
 
 @end

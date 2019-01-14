@@ -16,5 +16,7 @@ static CGFloat const heightSYCacheDirectoryCell = 60.0;
 
 /// 数据源
 @property (nonatomic, strong) SYCacheFileModel *model;
+/// 长按回调
+@property (nonatomic, copy) void (^longPress)(void);
 
 @end

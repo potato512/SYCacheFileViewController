@@ -96,6 +96,79 @@
             [weakSelf.fileRead fileReadWithFilePath:path target:weakSelf];
         }
     };
+    // 长按
+    self.cacheTable.longPress = ^(NSIndexPath *indexPath) {
+        //
+        SYCacheFileModel *model = weakSelf.cacheArray[indexPath.row];
+        SYCacheFileType type = model.fileType;
+        //
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alertController addAction:cancelAction];
+        if (type == SYCacheFileTypeVideo || type == SYCacheFileTypeImage) {
+            UIAlertAction *cacheAction = [UIAlertAction actionWithTitle:@"保存到相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if (type == SYCacheFileTypeVideo) {
+                    UISaveVideoAtPathToSavedPhotosAlbum(model.filePath, weakSelf, @selector(video:didFinishSavingWithError: contextInfo:), nil);
+                } else if (type == SYCacheFileTypeImage) {
+                    UIImage *image = [UIImage imageWithContentsOfFile:model.filePath];
+                    UIImageWriteToSavedPhotosAlbum(image, weakSelf, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+                }
+            }];
+            [alertController addAction:cacheAction];
+        }
+        UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            // 系统数据不可删除
+            if ([[SYCacheFileManager shareManager] isFileSystemWithFilePath:model.filePath]) {
+                [[[UIAlertView alloc] initWithTitle:nil message:@"系统文件不能删除" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil] show];
+                return;
+            }
+            
+            // 删除数据：删除数组、删除本地文件/文件夹、刷新页面、发通知刷新文件大小统计
+            // 删除数组
+            [weakSelf.cacheArray removeObjectAtIndex:indexPath.row];
+            // 删除本地文件/文件夹
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                BOOL isDelete = [SYCacheFileManager deleteFileWithDirectory:model.filePath];
+                NSLog(@"删除：%@", (isDelete ? @"成功" : @"失败"));
+            });
+            // 刷新页面
+            [weakSelf.cacheTable deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        }];
+        [alertController addAction:deleteAction];
+        [weakSelf presentViewController:alertController animated:YES completion:NULL];
+    };
+}
+
+#pragma mark - 视频图片保存
+
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    NSString *message = @"保存视频到相册成功";
+    if (error) {
+        message = @"保存视频到相册失败";
+    }
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    [alertController addAction:cancelAction];
+    [self presentViewController:alertController animated:YES completion:NULL];
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
+{
+    NSString *message = @"保存图片到相册成功";
+    if (error) {
+        message = @"保存图片到相册失败";
+    }
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    [alertController addAction:cancelAction];
+    [self presentViewController:alertController animated:YES completion:NULL];
 }
 
 #pragma mark - 响应

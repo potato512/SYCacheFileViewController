@@ -7,16 +7,16 @@
 //
 
 #import "SYCacheFileRead.h"
+// 音频
 #import <AVFoundation/AVFoundation.h>
 // 视频
 #import <AVKit/AVKit.h>
-
 // 文档
 #import <QuickLook/QuickLook.h>
 
 #import "SYCacheFileManager.h"
 
-@interface SYCacheFileRead () <AVAudioPlayerDelegate, UIDocumentInteractionControllerDelegate>
+@interface SYCacheFileRead () <AVAudioPlayerDelegate, UIDocumentInteractionControllerDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, weak) UIViewController *controller;
 
@@ -86,9 +86,22 @@
         } else if (SYCacheFileTypeVideo == type) {
             [self fileVidioReadWithFilePath:filePath target:target];
         } else if (SYCacheFileTypeImage == type) {
-            [self fileImageReadWithFilePath:filePath target:target];
+            if ([filePath hasSuffix:@"gif"]) {
+                [self fileDocumentReadWithFilePath:filePath target:target];
+            } else {
+                [self fileImageReadWithFilePath:filePath target:target];
+            }
         } else {
-            [self fileDocumentReadWithFilePath:filePath target:target];
+            if ([filePath hasSuffix:@"apk"]) {
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"无法打开apk文件" preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    
+                }];
+                [alertController addAction:cancelAction];
+                [target presentViewController:alertController animated:YES completion:NULL];
+            } else {
+                [self fileDocumentReadWithFilePath:filePath target:target];
+            }
         }
     }
 }
@@ -134,8 +147,9 @@
             
             self.audioPlayer.delegate = self;
 
-            [self.audioPlayer prepareToPlay];
-            [self.audioPlayer play];
+            if (self.audioPlayer.prepareToPlay) {
+                [self.audioPlayer play];
+            }
             
             self.durationTotal = self.audioPlayer.duration;
             [self fileReadAuionDuration];
@@ -155,6 +169,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioDurationValueChangeNotificationName object:number];
         //
         [self releaseSYCacheFileRead];
+        [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioStopNotificationName object:nil];
     }
 }
 
@@ -197,7 +212,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioDurationValueChangeNotificationName object:number];
 
     NSLog(@"duration = %.2f, durationTotal = %.2f", self.duration, self.durationTotal);
-    [self performSelector:@selector(fileReadAuionDuration) withObject:nil afterDelay:1.0];
+    [self performSelector:@selector(fileReadAuionDuration) withObject:nil afterDelay:0.3];
 }
 
 #pragma mark - 视频播放
@@ -220,28 +235,40 @@
 
 #pragma mark - 图片播放
 
+CGFloat scaleMini = 1.0;
+CGFloat scaleMax = 3.0;
+
 - (void)fileImageReadWithFilePath:(NSString *)filePath target:(id)target
 {
     if (filePath && target) {
         self.controller = target;
         UIImage *image = [[UIImage alloc] initWithContentsOfFile:filePath];
         if (self.imageView == nil) {
+            //
+            UIView *superView = [UIApplication sharedApplication].delegate.window;
+            UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, superView.frame.size.height, superView.frame.size.width, superView.frame.size.height)];
+            scrollView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
+            scrollView.delegate = self;
+            [scrollView setMinimumZoomScale:scaleMini];
+            [scrollView setMaximumZoomScale:scaleMax];
+            [superView addSubview:scrollView];
+            //
             self.imageView = [[UIImageView alloc] init];
             self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-            self.imageView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
-            //
+            // 隐藏
             UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideClick:)];
             self.imageView.userInteractionEnabled = YES;
             [self.imageView addGestureRecognizer:tapRecognizer];
             //
-            UIView *superView = [UIApplication sharedApplication].delegate.window;
-            self.imageView.frame = CGRectMake(0.0, superView.frame.size.height, superView.frame.size.width, superView.frame.size.height);
-            [superView addSubview:self.imageView];
+            self.imageView.frame = scrollView.bounds;
+            [scrollView addSubview:self.imageView];
         }
         self.imageView.image = image;
         //
         [UIView animateWithDuration:0.3 animations:^{
-            self.imageView.frame = CGRectMake(0.0, 0.0, self.imageView.frame.size.width, self.imageView.frame.size.height);
+            self.imageView.superview.frame = CGRectMake(0.0, 0.0, self.imageView.superview.frame.size.width, self.imageView.superview.frame.size.height);
+        } completion:^(BOOL finished) {
+            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
         }];
     }
 }
@@ -251,8 +278,46 @@
     UIView *view = recognizer.view;
     if (view && [view isKindOfClass:[UIImageView class]]) {
         [UIView animateWithDuration:0.3 animations:^{
-            view.frame = CGRectMake(0.0, view.frame.size.height, view.frame.size.width, view.frame.size.height);
+            view.superview.frame = CGRectMake(0.0, view.superview.frame.size.height, view.superview.frame.size.width, view.superview.frame.size.height);
+        } completion:^(BOOL finished) {
+            UIScrollView *scrollView = (UIScrollView *)self.imageView.superview;
+            [scrollView setZoomScale:scaleMini];
+            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
         }];
+    }
+}
+
+- (void)showInCenter:(UIScrollView *)scrollView imageView:(UIImageView *)imageView
+{
+    // 居中显示
+    CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width) ? (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
+    CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height) ?
+    (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 : 0.0;
+    imageView.center = CGPointMake(scrollView.contentSize.width * 0.5 + offsetX, scrollView.contentSize.height * 0.5 + offsetY);
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return self.imageView;
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+{
+    for (UIView *view in scrollView.subviews) {
+        if ([view isKindOfClass:[UIImageView class]]) {
+            [self showInCenter:scrollView imageView:view];
+        }
+    }
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
+{
+    // 缩放效果 放大或缩小
+    if (scrollView.minimumZoomScale >= scale) {
+        [scrollView setZoomScale:scaleMini animated:YES];
+    }
+    if (scrollView.maximumZoomScale <= scale) {
+        [scrollView setZoomScale:scaleMax animated:YES];
     }
 }
 

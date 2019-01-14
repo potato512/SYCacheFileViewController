@@ -70,6 +70,10 @@ static CGFloat const heightDetail = 20.0;
     _backView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, widthScreen, heightSYCacheDirectoryCell)];
     _backView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_backView];
+    //
+    UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    _backView.userInteractionEnabled = YES;
+    [_backView addGestureRecognizer:longPressRecognizer];
     
     self.typeImageView = [[UIImageView alloc] initWithFrame:frameImage];
     self.typeImageView.backgroundColor = [UIColor clearColor];
@@ -121,17 +125,42 @@ static CGFloat const heightDetail = 20.0;
         NSNumber *number = notification.object;
         NSTimeInterval progress = number.floatValue;
         self.model.fileProgress = progress;
-        self.progressView.progress = progress;
+        //
+        [UIView animateWithDuration:0.5 animations:^{
+            self.progressView.progress = progress;
+            self.typeImageView.transform = CGAffineTransformMakeRotation(M_PI_2 * progress * 100);
+        }];
     } else {
-        self.progressView.hidden = YES;
-        self.progressView.progress = 0.0;
+        if (self.progressView.hidden) {
+            return;
+        } else {
+            [UIView animateWithDuration:0.5 animations:^{
+                self.progressView.hidden = YES;
+                self.progressView.progress = 0.0;
+                
+                self.typeImageView.transform = CGAffineTransformMakeRotation(0.0);
+            }];
+        }
     }
 }
 
 - (void)resetAudioStop
 {
-    self.progressView.hidden = YES;
-    self.progressView.progress = 0.0;
+    [UIView animateWithDuration:0.5 animations:^{
+        self.progressView.hidden = YES;
+        self.progressView.progress = 0.0;
+        //
+        self.typeImageView.transform = CGAffineTransformMakeRotation(0.0);
+    }];
+}
+
+- (void)longPress:(UILongPressGestureRecognizer *)recognizer
+{
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        if (self.longPress) {
+            self.longPress();
+        }
+    }
 }
 
 #pragma mark - getter
@@ -141,7 +170,8 @@ static CGFloat const heightDetail = 20.0;
     if (_progressView == nil) {
         _progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
         _progressView.progressTintColor = [UIColor redColor];
-        _progressView.frame = CGRectMake(0.0, (_backView.frame.size.height - 2.0), _backView.frame.size.width, 2.0);
+        CGFloat height = 3.0;
+        _progressView.frame = CGRectMake(0.0, (_backView.frame.size.height - height), _backView.frame.size.width, height);
         [_backView addSubview:_progressView];
     }
     return _progressView;
@@ -164,7 +194,7 @@ static CGFloat const heightDetail = 20.0;
         NSString *sizeText = _model.fileSize;
         self.typeDetailLabel.text = sizeText;
         
-        SYCacheFileType type = [[SYCacheFileManager shareManager] fileTypeReadWithFilePath:_model.filePath];
+        SYCacheFileType type = _model.fileType;
         if (type == SYCacheFileTypeAudio) {
             self.progressView.hidden = !_model.fileProgressShow;
             self.progressView.progress = _model.fileProgress;

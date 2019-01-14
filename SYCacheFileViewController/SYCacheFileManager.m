@@ -70,7 +70,7 @@
 - (NSMutableArray *)cacheDocumentArrayUsing
 {
     if (_cacheDocumentArrayUsing == nil) {
-        _cacheDocumentArrayUsing = [[NSMutableArray alloc] initWithObjects:@".txt", @".sh", @".doc", @".docx", @".xls", @".xlsx", @".pdf", @".hlp", @".wps", @".rtf", @".html", @".htm", @".iso", @".rar", @".zip", @".exe", @".mdf", @".ppt", @".pptx", nil];
+        _cacheDocumentArrayUsing = [[NSMutableArray alloc] initWithObjects:@".txt", @".sh", @".doc", @".docx", @".xls", @".xlsx", @".pdf", @".hlp", @".wps", @".rtf", @".html", @".htm", @".iso", @".rar", @".zip", @".exe", @".mdf", @".ppt", @".pptx", @".apk", nil];
     }
     return _cacheDocumentArrayUsing;
 }
@@ -85,44 +85,44 @@
 
 #pragma mark - setter
 
-- (void)setCacheVideoArray:(NSArray *)cacheVideoArray
+- (void)setCacheVideoTypes:(NSArray *)cacheVideoTypes
 {
-    _cacheVideoArray = cacheVideoArray;
-    if (_cacheVideoArray.count > 0) {
-        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheVideoArray];
+    _cacheVideoTypes = cacheVideoTypes;
+    if (_cacheVideoTypes.count > 0) {
+        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheVideoTypes];
         [array addObjectsFromArray:self.cacheVideoArrayUsing];
         NSSet *set = [NSSet setWithArray:array];
         self.cacheVideoArrayUsing = (NSMutableArray *)[set allObjects];
     }
 }
 
-- (void)setCacheAudioArray:(NSArray *)cacheAudioArray
+- (void)setCacheAudioTypes:(NSArray *)cacheAudioTypes
 {
-    _cacheAudioArray = cacheAudioArray;
-    if (_cacheAudioArray.count > 0) {
-        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheAudioArray];
+    _cacheAudioTypes = cacheAudioTypes;
+    if (_cacheAudioTypes.count > 0) {
+        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheAudioTypes];
         [array addObjectsFromArray:self.cacheAudioArrayUsing];
         NSSet *set = [NSSet setWithArray:array];
         self.cacheAudioArrayUsing = (NSMutableArray *)[set allObjects];
     }
 }
 
-- (void)setCacheImageArray:(NSArray *)cacheImageArray
+- (void)setCacheImageTypes:(NSArray *)cacheImageTypes
 {
-    _cacheImageArray = cacheImageArray;
-    if (_cacheImageArray.count > 0) {
-        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheImageArray];
+    _cacheImageTypes = cacheImageTypes;
+    if (_cacheImageTypes.count > 0) {
+        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheImageTypes];
         [array addObjectsFromArray:self.cacheImageArrayUsing];
         NSSet *set = [NSSet setWithArray:array];
         self.cacheImageArrayUsing = (NSMutableArray *)[set allObjects];
     }
 }
 
-- (void)setCacheDocumentArray:(NSArray *)cacheDocumentArray
+- (void)setCacheDocumentTypes:(NSArray *)cacheDocumentTypes
 {
-    _cacheDocumentArray = cacheDocumentArray;
-    if (_cacheDocumentArray.count > 0) {
-        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheDocumentArray];
+    _cacheDocumentTypes = cacheDocumentTypes;
+    if (_cacheDocumentTypes.count > 0) {
+        NSMutableArray *array = [NSMutableArray arrayWithArray:_cacheDocumentTypes];
         [array addObjectsFromArray:self.cacheDocumentArrayUsing];
         NSSet *set = [NSSet setWithArray:array];
         self.cacheDocumentArrayUsing = (NSMutableArray *)[set allObjects];
@@ -257,6 +257,7 @@
             image = [UIImage imageNamed:@"folder_cacheFile"];
         } else {
             NSString *fileType = [SYCacheFileManager fileTypeWithFilePath:filePath];
+            fileType = fileType.lowercaseString;
             if ([self.cacheImageArrayUsing containsObject:fileType]) {
                 image = [UIImage imageNamed:@"image_cacheFile"];
             } else if ([self.cacheVideoArrayUsing containsObject:fileType]) {
@@ -271,6 +272,10 @@
                 image = [UIImage imageNamed:@"pdf_cacheFile"];
             } else if ([@[@".ppt", @".pptx"] containsObject:fileType]) {
                 image = [UIImage imageNamed:@"ppt_cacheFile"];
+            } else if ([@[@".zip", @".rar", @".iso"] containsObject:fileType]) {
+                image = [UIImage imageNamed:@"zip_cacheFile"];
+            } else if ([@[@".apk"] containsObject:fileType]) {
+                image = [UIImage imageNamed:@"apk_cacheFile"];
             } else {
                 image = [UIImage imageNamed:@"file_cacheFile"];
             }

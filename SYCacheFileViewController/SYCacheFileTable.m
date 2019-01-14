@@ -52,11 +52,17 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     SYCacheFileCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseSYCacheDirectoryCell];
-
     // 数据
     SYCacheFileModel *model = self.cacheDatas[indexPath.row];
     cell.model = model;
-
+    // 长按
+    SYCacheFileTable __weak *weakSelf = self;
+    cell.longPress = ^{
+        if (weakSelf.longPress) {
+            weakSelf.longPress(indexPath);
+        }
+    };
+    
     return cell;
 }
 
@@ -78,6 +84,7 @@
             if (![currentPath isEqualToString:previousPath]) {
                 previousModel.fileProgress = 0.0;
                 previousModel.fileProgressShow = NO;
+                [tableView reloadRowsAtIndexPaths:@[self.previousIndex] withRowAnimation:UITableViewRowAnimationNone];
             }
         }
         

@@ -15,13 +15,13 @@
 + (instancetype)shareManager;
 
 /// 视频文件（如：.mp4）
-@property (nonatomic, strong) NSArray *cacheVideoArray;
+@property (nonatomic, strong) NSArray *cacheVideoTypes;
 /// 音频文件（如：.mp3）
-@property (nonatomic, strong) NSArray *cacheAudioArray;
+@property (nonatomic, strong) NSArray *cacheAudioTypes;
 /// 图片文件（如：.png）
-@property (nonatomic, strong) NSArray *cacheImageArray;
+@property (nonatomic, strong) NSArray *cacheImageTypes;
 /// 文档文件（如：.txt）
-@property (nonatomic, strong) NSArray *cacheDocumentArray;
+@property (nonatomic, strong) NSArray *cacheDocumentTypes;
 
 /// 音视频文件浏览模式（默认NO）
 @property (nonatomic, assign) BOOL showDoucumentUI;

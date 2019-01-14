@@ -42,7 +42,7 @@
     // 自定义
     SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
     // 指定文件格式
-    [SYCacheFileManager shareManager].cacheDocumentArray = @[@".pages", @"wps", @".xls", @".pdf", @".rar"];
+    [SYCacheFileManager shareManager].cacheDocumentTypes = @[@".pages", @"wps", @".xls", @".pdf", @".rar"];
 //    [SYCacheFileManager shareManager].showDoucumentUI = YES;
     // 指定目录，或默认目录
     NSString *path = [SYCacheFileManager documentDirectoryPath];
