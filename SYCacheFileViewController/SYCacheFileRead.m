@@ -78,7 +78,16 @@
     }
 
     if ([SYCacheFileManager shareManager].showDoucumentUI) {
-        [self fileDocumentReadWithFilePath:filePath target:target];
+        if ([filePath hasSuffix:@"apk"]) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:@"无法打开apk文件" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            [alertController addAction:cancelAction];
+            [target presentViewController:alertController animated:YES completion:NULL];
+        } else {
+            [self fileDocumentReadWithFilePath:filePath target:target];
+        }
     } else {
         SYCacheFileType type = [[SYCacheFileManager shareManager] fileTypeReadWithFilePath:filePath];
         if (SYCacheFileTypeAudio == type) {

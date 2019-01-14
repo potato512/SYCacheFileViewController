@@ -90,6 +90,11 @@ cacheVC.cacheTitle = @"我的缓存文件";
 
 
 # 修改完善
+* 20190114
+  * 版本号：1.2.3
+  * 修改bug
+    * apk无法打开提示
+    
 * 20190110
   * 版本号：1.2.2
   * 修改完善
@@ -103,7 +108,7 @@ cacheVC.cacheTitle = @"我的缓存文件";
     * 音频播放
       * 播放时图标旋转状态
       * 停止播放时，多首音频异常
-        
+
     * SYCacheFileManager修改
       * @property (nonatomic, strong) NSArray *cacheVideoTypes; 改成 @property (nonatomic, strong) NSArray *cacheVideoTypes;
       * @property (nonatomic, strong) NSArray *cacheAudioArray; 改成 @property (nonatomic, strong) NSArray *cacheAudioTypes;
