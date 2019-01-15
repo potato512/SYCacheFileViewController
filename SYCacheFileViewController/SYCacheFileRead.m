@@ -52,6 +52,7 @@
 - (void)dealloc
 {
     [self fileAudioStop];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     NSLog(@"%@ 被释放了!", [self class]);
 }
 
@@ -69,11 +70,11 @@
 - (void)fileReadWithFilePath:(NSString *)filePath target:(id)target
 {
     if (filePath == nil || ![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-        [[[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"filePath指向文件不存在" delegate:@"知道了" cancelButtonTitle:nil otherButtonTitles:nil, nil] show];
+        [[[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"filePath指向文件不存在" delegate:@"确定" cancelButtonTitle:nil otherButtonTitles:nil, nil] show];
         return;
     }
     if (target == nil || ![target isKindOfClass:[UIViewController class]]) {
-        [[[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"target类型不是UIViewController" delegate:@"知道了" cancelButtonTitle:nil otherButtonTitles:nil, nil] show];
+        [[[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"target类型不是UIViewController" delegate:@"确定" cancelButtonTitle:nil otherButtonTitles:nil, nil] show];
         return;
     }
 
@@ -143,6 +144,7 @@
             }
         }
         
+        [self addNotificationDelete];
         if (self.audioPlayer == nil) {
             self.durationTotal = 0.0;
             self.duration = 0.0;
@@ -180,6 +182,18 @@
         [self releaseSYCacheFileRead];
         [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioStopNotificationName object:nil];
     }
+}
+
+#pragma mark 通知处理
+
+- (void)addNotificationDelete
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteAudioStop) name:SYCacheFileAudioDeleteNotificationName object:nil];
+}
+
+- (void)deleteAudioStop
+{
+    [self fileAudioStop];
 }
 
 #pragma mark 代理方法
@@ -250,6 +264,8 @@ CGFloat scaleMax = 3.0;
 - (void)fileImageReadWithFilePath:(NSString *)filePath target:(id)target
 {
     if (filePath && target) {
+        [self fileAudioStop];
+        
         self.controller = target;
         UIImage *image = [[UIImage alloc] initWithContentsOfFile:filePath];
         if (self.imageView == nil) {
@@ -314,7 +330,8 @@ CGFloat scaleMax = 3.0;
 {
     for (UIView *view in scrollView.subviews) {
         if ([view isKindOfClass:[UIImageView class]]) {
-            [self showInCenter:scrollView imageView:view];
+            UIImageView *imageView = (UIImageView *)view;
+            [self showInCenter:scrollView imageView:imageView];
         }
     }
 }

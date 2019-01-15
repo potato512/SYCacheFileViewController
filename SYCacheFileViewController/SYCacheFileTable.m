@@ -24,9 +24,7 @@
     self = [super initWithFrame:frame style:style];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
-        
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
-        
         [self registerClass:[SYCacheFileCell class] forCellReuseIdentifier:reuseSYCacheDirectoryCell];
         
         self.delegate = self;
@@ -59,7 +57,7 @@
     SYCacheFileTable __weak *weakSelf = self;
     cell.longPress = ^{
         if (weakSelf.longPress) {
-            weakSelf.longPress(indexPath);
+            weakSelf.longPress(weakSelf, indexPath);
         }
     };
     
@@ -102,23 +100,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        SYCacheFileModel *model = self.cacheDatas[indexPath.row];
-        // 系统数据不可删除
-        if ([[SYCacheFileManager shareManager] isFileSystemWithFilePath:model.filePath]) {
-            [[[UIAlertView alloc] initWithTitle:nil message:@"系统文件不能删除" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil] show];
-            return;
-        }
-        
-        // 删除数据：删除数组、删除本地文件/文件夹、刷新页面、发通知刷新文件大小统计
-        // 删除数组
-        [self.cacheDatas removeObjectAtIndex:indexPath.row];
-        // 删除本地文件/文件夹
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            BOOL isDelete = [SYCacheFileManager deleteFileWithDirectory:model.filePath];
-            NSLog(@"删除：%@", @(isDelete));
-        });
-        // 刷新页面
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self deleItemAtIndex:indexPath];
     }
 }
 
@@ -130,6 +112,39 @@
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return @"删除";
+}
+
+#pragma mark - 删除操作
+
+- (void)deleItemAtIndex:(NSIndexPath *)indexPath
+{
+    if (indexPath.row > self.cacheDatas.count - 1) {
+        return;
+    }
+    SYCacheFileModel *model = self.cacheDatas[indexPath.row];
+    // 系统数据不可删除
+    if ([[SYCacheFileManager shareManager] isFileSystemWithFilePath:model.filePath]) {
+        [[[UIAlertView alloc] initWithTitle:nil message:@"系统文件不能删除" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil] show];
+        return;
+    }
+    // 当前删除的是音频时，先停止播放
+    if (model.fileType == SYCacheFileTypeAudio) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SYCacheFileAudioDeleteNotificationName object:nil];
+    }
+    if (self.previousIndex) {
+        self.previousIndex = nil;
+    }
+    // 删除数据：删除数组、删除本地文件/文件夹、刷新页面、发通知刷新文件大小统计
+    // 删除数组
+    [self.cacheDatas removeObjectAtIndex:indexPath.row];
+    // 删除本地文件/文件夹
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BOOL isDelete = [SYCacheFileManager deleteFileWithDirectory:model.filePath];
+        NSLog(@"删除：%@", (isDelete ? @"成功" : @"失败"));
+    });
+    // 刷新页面
+//    [self deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    [self reloadData];
 }
 
 @end

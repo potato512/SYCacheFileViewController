@@ -78,7 +78,7 @@
 - (NSArray *)cacheSystemArrayUsing
 {
     if (_cacheSystemArrayUsing == nil) {
-        _cacheSystemArrayUsing = @[@"/tmp", @"/Library/Preferences", @"/Library/Caches/Snapshots", @"/Library/Caches", @"/Library", @"/Documents"];
+        _cacheSystemArrayUsing = @[@"/tmp", @"/Library/Preferences", @"/Library/Caches/Snapshots", @"/Library/Caches", @"/Library", @"/Documents", @"/Snapshots", @"/SystemData"];
     }
     return _cacheSystemArrayUsing;
 }
@@ -150,9 +150,12 @@
         SYCacheFileType type = [self fileTypeReadWithFilePath:model.filePath];
         if (SYCacheFileTypeUnknow == type) {
             // 过滤系统文件夹
-            NSRange range = [model.filePath rangeOfString:@"." options:NSBackwardsSearch];
-            if (range.location != NSNotFound)
-            {
+            // 原方法
+//            NSRange range = [model.filePath rangeOfString:@"." options:NSBackwardsSearch];
+//            if (range.location != NSNotFound) {
+//                continue;
+//            }
+            if ([model.fileName hasPrefix:@"."] || ![SYCacheFileManager isFileDirectoryWithFilePath:model.filePath]) {
                 continue;
             }
         } else {
@@ -226,6 +229,7 @@
 - (SYCacheFileType)fileTypeReadWithFilePath:(NSString *)filePath
 {
     NSString *fileType = [SYCacheFileManager fileTypeWithFilePath:filePath];
+    fileType = fileType.lowercaseString;
     SYCacheFileType type = SYCacheFileTypeUnknow;
     if ([self.cacheVideoArrayUsing containsObject:fileType]) {
         type = SYCacheFileTypeVideo;
@@ -321,6 +325,7 @@
         NSRange range = [filePath rangeOfString:@"." options:NSBackwardsSearch];
         if (range.location != NSNotFound) {
             NSString *text = [filePath substringFromIndex:(range.location)];
+            text = text.lowercaseString;
             return text;
         }
         

@@ -16,6 +16,8 @@
 /// 响应回调
 @property (nonatomic, copy) void (^itemClick)(NSIndexPath *indexPath);
 /// 长按回调
-@property (nonatomic, copy) void (^longPress)(NSIndexPath *indexPath);
+@property (nonatomic, copy) void (^longPress)(SYCacheFileTable *table, NSIndexPath *indexPath);
+
+- (void)deleItemAtIndex:(NSIndexPath *)indexPath;
 
 @end

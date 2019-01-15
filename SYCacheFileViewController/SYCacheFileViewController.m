@@ -42,10 +42,6 @@
     self.view.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.1];
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         self.edgesForExtendedLayout = UIRectEdgeNone;
-        
-        self.navigationController.navigationBar.translucent = NO;
-        self.extendedLayoutIncludesOpaqueBars = NO;
-        self.automaticallyAdjustsScrollViewInsets = NO;
     }
 }
 
@@ -78,11 +74,12 @@
             return ;
         }
         
+        if (indexPath.row > weakSelf.cacheArray.count - 1) {
+            return;
+        }
         SYCacheFileModel *model = weakSelf.cacheArray[indexPath.row];
-        // 路径
-        NSString *path = model.filePath;
-        // 类型
-        SYCacheFileType type = model.fileType;
+        NSString *path = model.filePath; // 路径
+        SYCacheFileType type = model.fileType; // 类型
         if (SYCacheFileTypeUnknow == type) {
             // 标题
             NSString *title = model.fileName;
@@ -97,7 +94,10 @@
         }
     };
     // 长按
-    self.cacheTable.longPress = ^(NSIndexPath *indexPath) {
+    self.cacheTable.longPress = ^(SYCacheFileTable *tableView, NSIndexPath *indexPath) {
+        if (indexPath.row > weakSelf.cacheArray.count - 1) {
+            return;
+        }
         //
         SYCacheFileModel *model = weakSelf.cacheArray[indexPath.row];
         SYCacheFileType type = model.fileType;
@@ -119,22 +119,7 @@
             [alertController addAction:cacheAction];
         }
         UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            // 系统数据不可删除
-            if ([[SYCacheFileManager shareManager] isFileSystemWithFilePath:model.filePath]) {
-                [[[UIAlertView alloc] initWithTitle:nil message:@"系统文件不能删除" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil] show];
-                return;
-            }
-            
-            // 删除数据：删除数组、删除本地文件/文件夹、刷新页面、发通知刷新文件大小统计
-            // 删除数组
-            [weakSelf.cacheArray removeObjectAtIndex:indexPath.row];
-            // 删除本地文件/文件夹
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                BOOL isDelete = [SYCacheFileManager deleteFileWithDirectory:model.filePath];
-                NSLog(@"删除：%@", (isDelete ? @"成功" : @"失败"));
-            });
-            // 刷新页面
-            [weakSelf.cacheTable deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [tableView deleItemAtIndex:indexPath];
         }];
         [alertController addAction:deleteAction];
         [weakSelf presentViewController:alertController animated:YES completion:NULL];

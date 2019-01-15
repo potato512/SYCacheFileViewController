@@ -33,25 +33,29 @@
 - (void)buttonClick
 {
     // 默认
-//    SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
-//    [self.navigationController pushViewController:cacheVC animated:YES];
-//
-//    NSString *path = [SYCacheFileManager homeDirectoryPath];
-//    NSLog(@"path = %@", path);
+    SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
+    [self.navigationController pushViewController:cacheVC animated:YES];
+
+    NSString *path = [SYCacheFileManager homeDirectoryPath];
+    NSLog(@"path = %@", path);
 
     // 自定义
-    SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
-    // 指定文件格式
-    [SYCacheFileManager shareManager].cacheDocumentTypes = @[@".pages", @"wps", @".xls", @".pdf", @".rar"];
-    [SYCacheFileManager shareManager].showDoucumentUI = YES;
-    // 指定目录，或默认目录
-    NSString *path = [SYCacheFileManager documentDirectoryPath];
-    NSArray *array = [[SYCacheFileManager shareManager] fileModelsWithFilePath:path];
-    cacheVC.cacheArray = [NSMutableArray arrayWithArray:array];
-    // 其它属性设置
-    cacheVC.cacheTitle = @"我的缓存文件";
-    //
-    [self.navigationController pushViewController:cacheVC animated:YES];
+//    SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
+//    // 指定文件格式
+//    [SYCacheFileManager shareManager].cacheDocumentTypes = @[@".pages", @"wps", @".xls", @".pdf", @".rar"];
+////    [SYCacheFileManager shareManager].showDoucumentUI = YES;
+//    // 指定目录，或默认目录
+//    NSString *pathDocument = [SYCacheFileManager documentDirectoryPath];
+//    NSArray *arrayDocument = [[SYCacheFileManager shareManager] fileModelsWithFilePath:pathDocument];
+//    NSString *pathCache = [SYCacheFileManager cacheDirectoryPath];
+//    NSArray *arrayCache = [[SYCacheFileManager shareManager] fileModelsWithFilePath:pathCache];
+//    NSMutableArray *array = [NSMutableArray arrayWithArray:arrayDocument];
+//    [array addObjectsFromArray:arrayCache];
+//    cacheVC.cacheArray = array;
+//    // 其它属性设置
+//    cacheVC.cacheTitle = @"我的缓存文件";
+//    //
+//    [self.navigationController pushViewController:cacheVC animated:YES];
     
     
 //    path = [SYCacheFileManager documentDirectoryPath];

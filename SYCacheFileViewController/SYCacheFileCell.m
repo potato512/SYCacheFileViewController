@@ -74,29 +74,29 @@ static CGFloat const heightDetail = 20.0;
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     _backView.userInteractionEnabled = YES;
     [_backView addGestureRecognizer:longPressRecognizer];
-    
+    //
     self.typeImageView = [[UIImageView alloc] initWithFrame:frameImage];
     self.typeImageView.backgroundColor = [UIColor clearColor];
     self.typeImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.typeImageView.clipsToBounds = YES;
     [_backView addSubview:self.typeImageView];
-    
+    //
     CGFloat originTitle = (originXY + sizeImage + originXY);
     CGFloat widthTitle = (widthScreen - originXY - sizeImage * 1.5 - originXY - originXY);
-    
+    //
     self.typeTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(originTitle, 0.0, widthTitle, heightTitle)];
     self.typeTitleLabel.backgroundColor = [UIColor clearColor];
     self.typeTitleLabel.font = [UIFont systemFontOfSize:13.0];
     self.typeTitleLabel.textColor = [UIColor blackColor];
     self.typeTitleLabel.numberOfLines = 2;
     [_backView addSubview:self.typeTitleLabel];
-    
+    //
     self.typeDetailLabel = [[UILabel alloc] initWithFrame:CGRectMake(originTitle, (_backView.frame.size.height - heightDetail - originXY / 2), widthTitle, heightDetail)];
     self.typeDetailLabel.backgroundColor = [UIColor clearColor];
     self.typeDetailLabel.font = [UIFont systemFontOfSize:11.0];
     self.typeDetailLabel.textColor = [UIColor lightGrayColor];
     [_backView addSubview:self.typeDetailLabel];
-    
+    //
     UIImageView *lineImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, (_backView.frame.size.height - 0.5), _backView.frame.size.width, 0.5)];
     lineImage.backgroundColor = [UIColor clearColor];
     lineImage.image = [UIImage imageNamed:@"line_cacheFile"];
@@ -119,39 +119,44 @@ static CGFloat const heightDetail = 20.0;
 
 - (void)resetAudioProgress:(NSNotification *)notification
 {
-    if (self.model.fileProgressShow) {
-        self.progressView.hidden = NO;
-        
-        NSNumber *number = notification.object;
-        NSTimeInterval progress = number.floatValue;
-        self.model.fileProgress = progress;
-        //
-        [UIView animateWithDuration:0.5 animations:^{
-            self.progressView.progress = progress;
-            self.typeImageView.transform = CGAffineTransformMakeRotation(M_PI_2 * progress * 100);
-        }];
-    } else {
-        if (self.progressView.hidden) {
-            return;
-        } else {
+    if (self.model.fileType == SYCacheFileTypeAudio) {
+        if (self.model.fileProgressShow) {
+            self.progressView.hidden = NO;
+            
+            NSNumber *number = notification.object;
+            NSTimeInterval progress = number.floatValue;
+            self.model.fileProgress = progress;
+            //
             [UIView animateWithDuration:0.5 animations:^{
-                self.progressView.hidden = YES;
-                self.progressView.progress = 0.0;
-                
-                self.typeImageView.transform = CGAffineTransformMakeRotation(0.0);
+                self.progressView.progress = progress;
+                self.typeImageView.transform = CGAffineTransformMakeRotation(M_PI_2 * progress * 100);
             }];
+        } else {
+            
+            if (self.progressView.hidden) {
+                return;
+            } else {
+                [UIView animateWithDuration:0.5 animations:^{
+                    self.progressView.hidden = YES;
+                    self.progressView.progress = 0.0;
+                    
+                    self.typeImageView.transform = CGAffineTransformMakeRotation(0.0);
+                }];
+            }
         }
     }
 }
 
 - (void)resetAudioStop
 {
-    [UIView animateWithDuration:0.5 animations:^{
-        self.progressView.hidden = YES;
-        self.progressView.progress = 0.0;
-        //
-        self.typeImageView.transform = CGAffineTransformMakeRotation(0.0);
-    }];
+    if (self.model.fileType == SYCacheFileTypeAudio) {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.progressView.hidden = YES;
+            self.progressView.progress = 0.0;
+            //
+            self.typeImageView.transform = CGAffineTransformMakeRotation(0.0);
+        }];
+    }
 }
 
 - (void)longPress:(UILongPressGestureRecognizer *)recognizer
