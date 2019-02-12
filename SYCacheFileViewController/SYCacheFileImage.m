@@ -118,6 +118,10 @@ static CGFloat const scaleMax = 3.0;
 - (void)reloadImages
 {
     if (self.images && self.images.count > 0) {
+        //
+        [self.scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        
+        //
         self.titleLabel.text = [NSString stringWithFormat:@"%@/%@", @(self.index + 1), @(self.images.count)];
         //
         SYCacheFileImage __weak *weakSelf = self;
