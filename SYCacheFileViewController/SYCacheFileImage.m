@@ -201,7 +201,7 @@ static CGFloat const scaleMax = 3.0;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    NSInteger page = scrollView.contentOffset.x / scrollView.frame.size.width;
+    NSInteger page = (scrollView.contentOffset.x / scrollView.frame.size.width);
     self.titleLabel.text = [NSString stringWithFormat:@"%@/%@", @(page + 1), @(self.images.count)];
 }
 
