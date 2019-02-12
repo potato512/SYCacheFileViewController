@@ -48,6 +48,7 @@
 		A7845A5D2110765100239867 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7845A5C2110765100239867 /* UIKit.framework */; };
 		A7845A5F2110767A00239867 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7845A5E2110767A00239867 /* Foundation.framework */; };
 		A7845A612110767F00239867 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7845A602110767F00239867 /* AVFoundation.framework */; };
+		A7957A10221259180063D32F /* SYCacheFileImage.m in Sources */ = {isa = PBXBuildFile; fileRef = A7957A0F221259180063D32F /* SYCacheFileImage.m */; };
 		A7C33F3F1F063E16007B4BC4 /* line_cacheFile.png in Resources */ = {isa = PBXBuildFile; fileRef = A7C33F3E1F063E16007B4BC4 /* line_cacheFile.png */; };
 		A7F0F0B21F022DEA001E482B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F0F0B11F022DEA001E482B /* main.m */; };
 		A7F0F0B51F022DEA001E482B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F0F0B41F022DEA001E482B /* AppDelegate.m */; };
@@ -125,6 +126,8 @@
 		A7845A5C2110765100239867 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A7845A5E2110767A00239867 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A7845A602110767F00239867 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		A7957A0E221259180063D32F /* SYCacheFileImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYCacheFileImage.h; sourceTree = "<group>"; };
+		A7957A0F221259180063D32F /* SYCacheFileImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYCacheFileImage.m; sourceTree = "<group>"; };
 		A7C33F3E1F063E16007B4BC4 /* line_cacheFile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = line_cacheFile.png; sourceTree = "<group>"; };
 		A7F0F0AD1F022DEA001E482B /* DemoCacheDirectory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoCacheDirectory.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7F0F0B11F022DEA001E482B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -184,6 +187,8 @@
 				A760EE291F03A57300594860 /* SYCacheFileTable.m */,
 				A760EE671F03A74C00594860 /* SYCacheFileManager.h */,
 				A760EE681F03A74C00594860 /* SYCacheFileManager.m */,
+				A7957A0E221259180063D32F /* SYCacheFileImage.h */,
+				A7957A0F221259180063D32F /* SYCacheFileImage.m */,
 				A760EE2C1F03A57300594860 /* SYCacheFileViewController.h */,
 				A760EE2D1F03A57300594860 /* SYCacheFileViewController.m */,
 				A760EE2E1F03A57300594860 /* SYCacheFileImages */,
@@ -481,6 +486,7 @@
 				A7F0F0B51F022DEA001E482B /* AppDelegate.m in Sources */,
 				A760EE491F03A57300594860 /* SYCacheFileCell.m in Sources */,
 				A760EE4D1F03A57300594860 /* SYCacheFileViewController.m in Sources */,
+				A7957A10221259180063D32F /* SYCacheFileImage.m in Sources */,
 				A7F0F0B21F022DEA001E482B /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -624,7 +630,7 @@
 				DEVELOPMENT_TEAM = 9YWJ3PZHZG;
 				INFOPLIST_FILE = DemoCacheDirectory/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.herman.common;
+				PRODUCT_BUNDLE_IDENTIFIER = com.byd.common;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = Development_Provisioning_BYDCommon;
 			};
@@ -638,7 +644,7 @@
 				DEVELOPMENT_TEAM = 9YWJ3PZHZG;
 				INFOPLIST_FILE = DemoCacheDirectory/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.herman.common;
+				PRODUCT_BUNDLE_IDENTIFIER = com.byd.common;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = Development_Provisioning_BYDCommon;
 			};

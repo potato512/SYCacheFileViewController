@@ -15,6 +15,7 @@
 #import <QuickLook/QuickLook.h>
 
 #import "SYCacheFileManager.h"
+#import "SYCacheFileImage.h"
 
 @interface SYCacheFileRead () <AVAudioPlayerDelegate, UIDocumentInteractionControllerDelegate, UIScrollViewDelegate>
 
@@ -22,6 +23,7 @@
 
 // 图片显示
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) SYCacheFileImage *fileImage;
 
 // 音频播放
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
@@ -267,85 +269,97 @@ CGFloat scaleMax = 3.0;
         [self fileAudioStop];
         
         self.controller = target;
-        UIImage *image = [[UIImage alloc] initWithContentsOfFile:filePath];
-        if (self.imageView == nil) {
-            //
-            UIView *superView = [UIApplication sharedApplication].delegate.window;
-            UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, superView.frame.size.height, superView.frame.size.width, superView.frame.size.height)];
-            scrollView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
-            scrollView.delegate = self;
-            [scrollView setMinimumZoomScale:scaleMini];
-            [scrollView setMaximumZoomScale:scaleMax];
-            [superView addSubview:scrollView];
-            //
-            self.imageView = [[UIImageView alloc] init];
-            self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-            // 隐藏
-            UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideClick:)];
-            self.imageView.userInteractionEnabled = YES;
-            [self.imageView addGestureRecognizer:tapRecognizer];
-            //
-            self.imageView.frame = scrollView.bounds;
-            [scrollView addSubview:self.imageView];
+//        UIImage *image = [[UIImage alloc] initWithContentsOfFile:filePath];
+//        if (self.imageView == nil) {
+//            //
+//            UIView *superView = [UIApplication sharedApplication].delegate.window;
+//            UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, superView.frame.size.height, superView.frame.size.width, superView.frame.size.height)];
+//            scrollView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
+//            scrollView.delegate = self;
+//            [scrollView setMinimumZoomScale:scaleMini];
+//            [scrollView setMaximumZoomScale:scaleMax];
+//            [superView addSubview:scrollView];
+//            //
+//            self.imageView = [[UIImageView alloc] init];
+//            self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+//            // 隐藏
+//            UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideClick:)];
+//            self.imageView.userInteractionEnabled = YES;
+//            [self.imageView addGestureRecognizer:tapRecognizer];
+//            //
+//            self.imageView.frame = scrollView.bounds;
+//            [scrollView addSubview:self.imageView];
+//        }
+//        self.imageView.image = image;
+//        //
+//        [UIView animateWithDuration:0.3 animations:^{
+//            self.imageView.superview.frame = CGRectMake(0.0, 0.0, self.imageView.superview.frame.size.width, self.imageView.superview.frame.size.height);
+//        } completion:^(BOOL finished) {
+//            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+//        }];
+        
+        NSArray *images = @[filePath];
+        if ([SYCacheFileManager shareManager].showImageShuffling) {
+            NSString *file = filePath.stringByDeletingLastPathComponent;
+            images = [SYCacheFileManager imagefilesWithFilePath:file];
         }
-        self.imageView.image = image;
-        //
-        [UIView animateWithDuration:0.3 animations:^{
-            self.imageView.superview.frame = CGRectMake(0.0, 0.0, self.imageView.superview.frame.size.width, self.imageView.superview.frame.size.height);
-        } completion:^(BOOL finished) {
-            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-        }];
-    }
-}
-
-- (void)hideClick:(UITapGestureRecognizer *)recognizer
-{
-    UIView *view = recognizer.view;
-    if (view && [view isKindOfClass:[UIImageView class]]) {
-        [UIView animateWithDuration:0.3 animations:^{
-            view.superview.frame = CGRectMake(0.0, view.superview.frame.size.height, view.superview.frame.size.width, view.superview.frame.size.height);
-        } completion:^(BOOL finished) {
-            UIScrollView *scrollView = (UIScrollView *)self.imageView.superview;
-            [scrollView setZoomScale:scaleMini];
-            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-        }];
-    }
-}
-
-- (void)showInCenter:(UIScrollView *)scrollView imageView:(UIImageView *)imageView
-{
-    // 居中显示
-    CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width) ? (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
-    CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height) ?
-    (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 : 0.0;
-    imageView.center = CGPointMake(scrollView.contentSize.width * 0.5 + offsetX, scrollView.contentSize.height * 0.5 + offsetY);
-}
-
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
-{
-    return self.imageView;
-}
-
-- (void)scrollViewDidZoom:(UIScrollView *)scrollView
-{
-    for (UIView *view in scrollView.subviews) {
-        if ([view isKindOfClass:[UIImageView class]]) {
-            UIImageView *imageView = (UIImageView *)view;
-            [self showInCenter:scrollView imageView:imageView];
+        if (self.fileImage == nil) {
+            self.fileImage = [[SYCacheFileImage alloc] init];
         }
+        self.fileImage.index = [SYCacheFileManager shareManager].indexImage;
+        self.fileImage.images = images;
+        [self.fileImage reloadImages];
     }
 }
 
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
-{
-    // 缩放效果 放大或缩小
-    if (scrollView.minimumZoomScale >= scale) {
-        [scrollView setZoomScale:scaleMini animated:YES];
-    }
-    if (scrollView.maximumZoomScale <= scale) {
-        [scrollView setZoomScale:scaleMax animated:YES];
-    }
-}
+//- (void)hideClick:(UITapGestureRecognizer *)recognizer
+//{
+//    UIView *view = recognizer.view;
+//    if (view && [view isKindOfClass:[UIImageView class]]) {
+//        [UIView animateWithDuration:0.3 animations:^{
+//            view.superview.frame = CGRectMake(0.0, view.superview.frame.size.height, view.superview.frame.size.width, view.superview.frame.size.height);
+//        } completion:^(BOOL finished) {
+//            UIScrollView *scrollView = (UIScrollView *)self.imageView.superview;
+//            [scrollView setZoomScale:scaleMini];
+//            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+//        }];
+//    }
+//}
+//
+//- (void)showInCenter:(UIScrollView *)scrollView imageView:(UIImageView *)imageView
+//{
+//    // 居中显示
+//    CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width) ? (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
+//    CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height) ?
+//    (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 : 0.0;
+//    imageView.center = CGPointMake(scrollView.contentSize.width * 0.5 + offsetX, scrollView.contentSize.height * 0.5 + offsetY);
+//}
+//
+//- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+//{
+//    return self.imageView;
+//}
+//
+//- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+//{
+//    for (UIView *view in scrollView.subviews) {
+//        if ([view isKindOfClass:[UIImageView class]]) {
+//            UIImageView *imageView = (UIImageView *)view;
+//            [self showInCenter:scrollView imageView:imageView];
+//        }
+//    }
+//}
+//
+//- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
+//{
+//    // 缩放效果 放大或缩小
+//    if (scrollView.minimumZoomScale >= scale) {
+//        [scrollView setZoomScale:scaleMini animated:YES];
+//    }
+//    if (scrollView.maximumZoomScale <= scale) {
+//        [scrollView setZoomScale:scaleMax animated:YES];
+//    }
+//}
 
 #pragma mark - 文件阅读
 

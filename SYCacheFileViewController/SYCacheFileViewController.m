@@ -90,6 +90,9 @@
             cacheVC.cacheArray = (NSMutableArray *)files;
             [weakSelf.navigationController pushViewController:cacheVC animated:YES];
         } else {
+            if (type == SYCacheFileTypeImage) {
+                [SYCacheFileManager shareManager].indexImage = indexPath.row;
+            }
             [weakSelf.fileRead fileReadWithFilePath:path target:weakSelf];
         }
     };

@@ -25,6 +25,10 @@
 
 /// 音视频文件浏览模式（默认NO）
 @property (nonatomic, assign) BOOL showDoucumentUI;
+/// 图片浏览（默认 NO单图，YES多图）
+@property (nonatomic, assign) BOOL showImageShuffling;
+/// 图片索引（默认0，多图时显示当前索引图片）
+@property (nonatomic, assign) NSInteger indexImage;
 
 /**
  *  文件model
@@ -189,6 +193,15 @@
  *  @return NSArray
  */
 + (NSArray *)subfilesWithFilePath:(NSString *)filePath;
+
+/**
+ *  获取指定文件路径的所有图片文件
+ *
+ *  @param filePath 文件路径
+ *
+ *  @return NSArray
+ */
++ (NSArray *)imagefilesWithFilePath:(NSString *)filePath;
 
 #pragma mark - 文件与目录的操作
 

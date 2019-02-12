@@ -299,17 +299,20 @@
  */
 + (NSString *)fileNameWithFilePath:(NSString *)filePath
 {
-    if ([self isFileExists:filePath]) {
-        NSRange range = [filePath rangeOfString:@"/" options:NSBackwardsSearch];
-        if (range.location != NSNotFound) {
-            NSString *text = [filePath substringFromIndex:(range.location + range.length)];
-            return text;
-        }
-        
-        return nil;
-    }
+//    if ([self isFileExists:filePath]) {
+//        NSRange range = [filePath rangeOfString:@"/" options:NSBackwardsSearch];
+//        if (range.location != NSNotFound) {
+//            NSString *text = [filePath substringFromIndex:(range.location + range.length)];
+//            return text;
+//        }
+//
+//        return nil;
+//    }
+//
+//    return nil;
     
-    return nil;
+    NSString *text = filePath.lastPathComponent;
+    return text;
 }
 
 /**
@@ -321,18 +324,22 @@
  */
 + (NSString *)fileTypeWithFilePath:(NSString *)filePath
 {
-    if ([self isFileExists:filePath]) {
-        NSRange range = [filePath rangeOfString:@"." options:NSBackwardsSearch];
-        if (range.location != NSNotFound) {
-            NSString *text = [filePath substringFromIndex:(range.location)];
-            text = text.lowercaseString;
-            return text;
-        }
-        
-        return nil;
-    }
+//    if ([self isFileExists:filePath]) {
+//        NSRange range = [filePath rangeOfString:@"." options:NSBackwardsSearch];
+//        if (range.location != NSNotFound) {
+//            NSString *text = [filePath substringFromIndex:(range.location)];
+//            text = text.lowercaseString;
+//            return text;
+//        }
+//
+//        return nil;
+//    }
+//
+//    return nil;
     
-    return nil;
+    NSString *text = filePath.pathExtension;
+    text = [NSString stringWithFormat:@".%@", text];
+    return text;
 }
 
 /**
@@ -344,12 +351,15 @@
  */
 + (NSString *)fileTypeExtensionWithFilePath:(NSString *)filePath
 {
-    if ([self isFileExists:filePath]) {
-        NSString *text = filePath.pathExtension;
-        return text;
-    }
+//    if ([self isFileExists:filePath]) {
+//        NSString *text = filePath.pathExtension;
+//        return text;
+//    }
+//
+//    return nil;
     
-    return nil;
+    NSString *text = filePath.pathExtension;
+    return text;
 }
 
 #pragma mark - 文件目录
@@ -498,6 +508,28 @@
 {
     NSArray *files = [[self class] filesWithFilePath:filePath isDirectory:NO];
     return files;
+}
+
+/**
+ *  获取指定文件路径的所有图片文件
+ *
+ *  @param filePath 文件路径
+ *
+ *  @return NSArray
+ */
++ (NSArray *)imagefilesWithFilePath:(NSString *)filePath
+{
+    NSArray *files = [[self class] filesWithFilePath:filePath isDirectory:NO];
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    [files enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *file = (NSString *)obj;
+        SYCacheFileType type = [[SYCacheFileManager shareManager] fileTypeReadWithFilePath:file];
+        if (type == SYCacheFileTypeImage) {
+            file = [filePath stringByAppendingPathComponent:file];
+            [array addObject:file];
+        }
+    }];
+    return array;
 }
 
 #pragma mark - 文件与目录的操作
