@@ -4,7 +4,7 @@
 //
 //  Created by zhangshaoyu on 17/6/28.
 //  Copyright © 2017年 zhangshaoyu. All rights reserved.
-//
+//  https://github.com/potato512/SYCacheFileViewController
 
 #ifndef SYCacheFileDefine_h
 #define SYCacheFileDefine_h
