@@ -12,8 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYCacheScaleImage : UIView
 
+/// 图片点击回调
 @property (nonatomic, copy) void (^imageTap)(void);
 
+/// 图片显示（根据路径）
 - (void)showImageWithFilePath:(NSString *)filePath;
 
 @end
@@ -22,9 +24,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SYCacheFileImage : UIView
 
+/// 图片数组
 @property (nonatomic, strong) NSArray <NSString *> *images;
+/// 图片索引（默认0第一张）
 @property (nonatomic, assign) NSInteger index;
-
+/// 图片刷新
 - (void)reloadImages;
 
 @end

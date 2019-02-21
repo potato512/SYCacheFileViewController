@@ -9,12 +9,7 @@
 #ifndef SYCacheFileDefine_h
 #define SYCacheFileDefine_h
 
-
 static NSString *const SYCacheFileTitle = @"缓存文件";
-
-static NSString *const SYCacheFileAudioDurationValueChangeNotificationName = @"AudioDurationValueChangeNotificationName";
-static NSString *const SYCacheFileAudioStopNotificationName = @"AudioStopNotificationName";
-static NSString *const SYCacheFileAudioDeleteNotificationName = @"AudioDeleteNotificationName";
 
 /**
  *  默认显示文件

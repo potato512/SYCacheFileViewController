@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "SYCacheFileDefine.h"
+#import "SYCacheFileAudio.h"
 
 @interface SYCacheFileManager : NSObject
 
