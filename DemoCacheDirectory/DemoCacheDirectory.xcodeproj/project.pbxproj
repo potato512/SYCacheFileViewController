@@ -60,6 +60,8 @@
 		A7F0F0C01F022DEA001E482B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7F0F0BE1F022DEA001E482B /* LaunchScreen.storyboard */; };
 		A7F0F0CB1F022DEA001E482B /* DemoCacheDirectoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F0F0CA1F022DEA001E482B /* DemoCacheDirectoryTests.m */; };
 		A7F0F0D61F022DEA001E482B /* DemoCacheDirectoryUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F0F0D51F022DEA001E482B /* DemoCacheDirectoryUITests.m */; };
+		A7F9262022261BC30081DC8A /* SYCacheFileCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F9261F22261BC30081DC8A /* SYCacheFileCollectionCell.m */; };
+		A7F9262322261BEA0081DC8A /* SYCacheFileCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F9262222261BEA0081DC8A /* SYCacheFileCollection.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -151,6 +153,10 @@
 		A7F0F0D11F022DEA001E482B /* DemoCacheDirectoryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoCacheDirectoryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7F0F0D51F022DEA001E482B /* DemoCacheDirectoryUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoCacheDirectoryUITests.m; sourceTree = "<group>"; };
 		A7F0F0D71F022DEA001E482B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A7F9261E22261BC30081DC8A /* SYCacheFileCollectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYCacheFileCollectionCell.h; sourceTree = "<group>"; };
+		A7F9261F22261BC30081DC8A /* SYCacheFileCollectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYCacheFileCollectionCell.m; sourceTree = "<group>"; };
+		A7F9262122261BEA0081DC8A /* SYCacheFileCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SYCacheFileCollection.h; sourceTree = "<group>"; };
+		A7F9262222261BEA0081DC8A /* SYCacheFileCollection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SYCacheFileCollection.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +211,10 @@
 				A760EE471F03A57300594860 /* SYCacheFileModel.h */,
 				A760EE481F03A57300594860 /* SYCacheFileModel.m */,
 				A760EE6A1F03A92400594860 /* SYCacheFileDefine.h */,
+				A7F9261E22261BC30081DC8A /* SYCacheFileCollectionCell.h */,
+				A7F9261F22261BC30081DC8A /* SYCacheFileCollectionCell.m */,
+				A7F9262122261BEA0081DC8A /* SYCacheFileCollection.h */,
+				A7F9262222261BEA0081DC8A /* SYCacheFileCollection.m */,
 			);
 			name = SYCacheFileViewController;
 			path = ../../SYCacheFileViewController;
@@ -488,6 +498,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7F9262022261BC30081DC8A /* SYCacheFileCollectionCell.m in Sources */,
 				A760EE4A1F03A57300594860 /* SYCacheFileRead.m in Sources */,
 				A760EE4B1F03A57300594860 /* SYCacheFileTable.m in Sources */,
 				A760EE691F03A74C00594860 /* SYCacheFileManager.m in Sources */,
@@ -495,6 +506,7 @@
 				A760EE661F03A57300594860 /* SYCacheFileModel.m in Sources */,
 				A75BFEFB221E46BB008C7D10 /* SYCacheFileAudio.m in Sources */,
 				A7F0F0B51F022DEA001E482B /* AppDelegate.m in Sources */,
+				A7F9262322261BEA0081DC8A /* SYCacheFileCollection.m in Sources */,
 				A760EE491F03A57300594860 /* SYCacheFileCell.m in Sources */,
 				A75BFEFE221E46D8008C7D10 /* SYCacheFileVideo.m in Sources */,
 				A760EE4D1F03A57300594860 /* SYCacheFileViewController.m in Sources */,

@@ -28,8 +28,8 @@
 @property (nonatomic, assign) BOOL showDoucumentUI;
 /// 图片浏览（默认 NO单图，YES多图）
 @property (nonatomic, assign) BOOL showImageShuffling;
-/// 图片索引（默认0，多图时显示当前索引图片）
-@property (nonatomic, assign) NSInteger indexImage;
+/// 被选中浏览图片名称（默认nil，多图时匹配并显示当前索引图片）
+@property (nonatomic, strong) NSString *nameImage;
 
 /**
  *  文件model

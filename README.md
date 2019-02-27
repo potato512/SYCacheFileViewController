@@ -88,8 +88,17 @@ NSString *path = [SYCacheFileManager documentDirectoryPath];
 NSArray *array = [[SYCacheFileManager shareManager] fileModelsWithFilePath:path];
 cacheVC.cacheArray = [NSMutableArray arrayWithArray:array];
 
-// 其它属性设置
+// 标题
 cacheVC.cacheTitle = @"我的缓存文件";
+
+// 单图或多图浏览
+[SYCacheFileManager shareManager].showImageShuffling = YES;
+
+// 文件浏览方式
+[SYCacheFileManager shareManager].showDoucumentUI = YES;
+
+// 列表，或九宫格显示
+cacheVC.showType = 1;
 
 //
 [self.navigationController pushViewController:cacheVC animated:YES];
@@ -99,6 +108,12 @@ cacheVC.cacheTitle = @"我的缓存文件";
 
 
 # 修改完善
+* 20190227
+  * 版本号：1.2.9
+  * 优化修改
+    * 显示样式：列表、九宫格
+    * 多图显示数量及索引异常bug
+
 * 20190221
   * 版本号：1.2.8
   * 优化修改

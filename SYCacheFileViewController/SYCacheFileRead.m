@@ -150,7 +150,11 @@ CGFloat scaleMax = 3.0;
         if (self.fileImage == nil) {
             self.fileImage = [[SYCacheFileImage alloc] init];
         }
-        self.fileImage.index = [SYCacheFileManager shareManager].indexImage;
+        NSInteger index = 0;
+        if ([SYCacheFileManager shareManager].nameImage) {
+            index = [images indexOfObject:[SYCacheFileManager shareManager].nameImage];
+        }
+        self.fileImage.index = index;
         self.fileImage.images = images;
         [self.fileImage reloadImages];
     }

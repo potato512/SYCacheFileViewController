@@ -35,6 +35,7 @@
     // 默认
     SYCacheFileViewController *cacheVC = [[SYCacheFileViewController alloc] init];
     [SYCacheFileManager shareManager].showImageShuffling = YES;
+    cacheVC.showType = 1;
     [self.navigationController pushViewController:cacheVC animated:YES];
 
     NSString *path = [SYCacheFileManager homeDirectoryPath];

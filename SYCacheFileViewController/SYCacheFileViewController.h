@@ -15,4 +15,7 @@
 /// 数据源（默认home目录）
 @property (nonatomic, strong) NSMutableArray *cacheArray;
 
+/// 显示样式（默认0列表，1九宫格）
+@property (nonatomic, assign) NSInteger showType;
+
 @end
